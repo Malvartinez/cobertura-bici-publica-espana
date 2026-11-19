@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cobertura bici pública</title>
+<meta name="description" content="Comparativa de la población que vive a menos de 250 m, entre 250 y 500 m o a más de 500 m andando de una estación de los sistemas de bicicleta pública de las grandes ciudades españolas.">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem('cobertura_tema')||'dark'}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme=dark]{--bg:#111214;--panel:#1A1C20;--s1:#222429;--s2:#2A2D33;--b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.12);--accent:#2D8EFF;--accent-h:#5AA8FF;--tx:#E8EAED;--tx2:#9AA0A8;--tx3:#6B7079}
+[data-theme=light]{--bg:#F4F5F7;--panel:#FFFFFF;--s1:#F2F3F5;--s2:#E8EAED;--b1:rgba(0,0,0,.07);--b2:rgba(0,0,0,.12);--accent:#1F6FE0;--accent-h:#1A5FC2;--tx:#1A1C20;--tx2:#5A6069;--tx3:#8A9099}
+:root{--gv:#2fa35a;--ga:#f0b90b;--gr:#e0443a;--r:10px}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:400 14px/1.5 'IBM Plex Sans',system-ui,sans-serif}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-h)}
+.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:12px;height:48px;padding:0 16px;background:var(--panel);border-bottom:1px solid var(--b2)}
+.brand{font-weight:700;font-size:15px}.sp{flex:1}
+.ib{width:30px;height:30px;border:1px solid var(--b2);background:var(--s1);border-radius:6px;cursor:pointer;color:var(--tx);font-size:14px}
+main{max-width:1180px;margin:0 auto;padding:24px 16px 48px}
+h1{font-size:26px;line-height:1.2;margin:0 0 8px;letter-spacing:-.01em}
+.lead{color:var(--tx2);max-width:760px;margin:0 0 20px}
+.lv{display:inline-flex;align-items:center;gap:5px;margin-right:12px;white-space:nowrap}.lv i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:0 0 22px}
+.kpi{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r);padding:12px 14px}
+.kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--tx2)}.kpi .kv{font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--tx3)}
+.card{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r)}
+.tools{display:flex;gap:10px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--b1);flex-wrap:wrap}
+.tools input{background:var(--s1);border:1px solid var(--b2);border-radius:6px;padding:6px 10px;color:var(--tx);font:inherit;min-width:220px;flex:1;max-width:320px}
+.tools .muted{color:var(--tx2);font-size:12px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:900px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;border-bottom:1px solid var(--b1);text-align:right;white-space:nowrap}
+th{font-size:11px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:.04em;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+th:hover{color:var(--tx)}th.on::after{content:' ↓'}th.on.asc::after{content:' ↑'}
+th:first-child,td:first-child,th.l,td.l{text-align:left}
+tbody tr:hover{background:var(--s1)}
+td .nm{font-weight:600}td .ct{display:block;font-size:12px;color:var(--tx2)}
+.bar{display:flex;height:16px;border-radius:3px;overflow:hidden;min-width:200px;background:var(--s2)}
+.bar span{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#111;overflow:hidden}
+.v{background:var(--gv)}.a{background:var(--ga)}.r{background:var(--gr)}
+.tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:4px;background:var(--s2);color:var(--tx2);margin-left:4px;vertical-align:1px}
+.notes{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.notes section{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px}
+.notes h2{font-size:15px;margin:0 0 6px}.notes p,.notes li{color:var(--tx2);font-size:13px}.notes ul{padding-left:18px;margin:6px 0}
+footer{color:var(--tx3);font-size:12px;margin-top:24px}
+@media (max-width:640px){h1{font-size:21px}.tools input{min-width:0;max-width:none;flex:1 1 100%}.tools .hint{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">Cobertura bici pública</div><div class="sp"></div>
+  <a href="https://github.com/Malvartinez/cobertura-bici-publica-espana" style="font-size:12px">Código</a>
+  <button class="ib" id="theme" title="Cambiar tema">☀</button></header>
+<main>
+  <h1>¿Cuánta gente vive cerca de una estación de bici pública?</h1>
+  <p class="lead">Población de cada ciudad según la distancia <b>andando por la red peatonal real</b> hasta la estación más cercana de su sistema de bicicleta pública:
+    <span class="lv"><i class="v"></i>menos de 250 m</span><span class="lv"><i class="a"></i>250–500 m</span><span class="lv" style="margin-right:0"><i class="r"></i>más de 500 m</span>.
+    Pulsa una ciudad para ver su mapa, sus barrios, el ranking de estaciones y el simulador de ampliación.</p>
+  <div class="kpis" id="kpis"></div>
+  <div class="card">
+    <div class="tools"><input id="q" type="search" placeholder="Buscar ciudad o sistema…"><span class="muted" id="cnt"></span><span class="sp"></span><span class="muted hint">Pulsa una cabecera para ordenar</span></div>
+    <div class="tw"><table><thead><tr id="hd"></tr></thead><tbody id="tb"></tbody></table></div>
+  </div>
+  <div class="notes">
+    <section><h2>Método</h2><p>La población de cada sección censal (INE, Censo anual 2025) se reparte entre sus edificios residenciales según su número de viviendas (Catastro). La distancia de cada edificio a la estación más cercana se calcula sobre la red peatonal de OpenStreetMap; si no hay ninguna a menos de 1,5 km, cuenta como «más de 500 m». El análisis abarca todo el término municipal.</p></section>
+    <section><h2>Cómo leer la comparación</h2><ul>
+      <li><b>Hab./estación</b> y <b>Est./10.000 hab.</b> miden el tamaño de la red respecto a la población.</li>
+      <li><b>Nuevas para 80 %</b>: estaciones que habría que añadir, elegidas una a una donde más mejoran la cobertura, para que el 80 % de la población viva a menos de 250 m. «—» si ya se supera o no se alcanza dentro del simulador.</li>
+      <li>Los términos municipales muy extensos con zonas rurales o de monte (Zaragoza, Badajoz, Albacete…) penalizan el porcentaje.</li></ul></section>
+    <section><h2>Fuentes y diferencias</h2><ul>
+      <li>Estaciones: feeds GBFS oficiales o, si el operador no publica uno, CityBikes.</li>
+      <li>Edificios: Catastro (DG del Catastro); en Bilbao, Donostia y Vitoria, catastros forales <span class="tag">foral</span>.</li>
+      <li>Zonas: barrios oficiales del ayuntamiento cuando se han podido obtener; si no, distritos censales del INE.</li>
+      <li>Red peatonal © colaboradores de OpenStreetMap (ODbL).</li></ul></section>
+  </div>
+  <footer id="ft"></footer>
+</main>
+<script>
+(function () {
+  var $ = function (s) { return document.querySelector(s); };
+  var nf = function (x, d) { return x == null ? '—' : Number(x).toLocaleString('es-ES', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0, useGrouping: 'always' }); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  var root = document.documentElement;
+  var setIcon = function () { $('#theme').textContent = root.dataset.theme === 'dark' ? '☀' : '☾'; };
+  $('#theme').onclick = function () { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('cobertura_tema', root.dataset.theme); setIcon(); };
+  setIcon();
+  var COLS = [
+    { k: 'ciudad', t: 'Ciudad · sistema', l: true }, { k: 'poblacion', t: 'Población' }, { k: 'estaciones', t: 'Estaciones' },
+    { k: 'hab_por_estacion', t: 'Hab./estación' }, { k: 'est_10k', t: 'Est./10.000 hab.' },
+    { k: 'pct_v', t: 'Reparto de la población', l: true }, { k: 'pct_v2', t: '< 250 m', s: 'pct_v' }, { k: 'pct_r', t: '> 500 m' },
+    { k: 'nuevas_80', t: 'Nuevas para 80 %' }];
+  var S = { k: 'pct_v', d: -1, q: '' }, data = [];
+  $('#hd').innerHTML = COLS.map(function (c) { return '<th data-k="' + (c.s || c.k) + '" class="' + (c.l ? 'l' : '') + '">' + c.t + '</th>'; }).join('');
+  $('#hd').onclick = function (e) {
+    var th = e.target.closest('th'); if (!th) return; var k = th.dataset.k;
+    if (S.k === k) S.d = -S.d; else { S.k = k; S.d = k === 'ciudad' || k === 'pct_r' || k === 'nuevas_80' || k === 'hab_por_estacion' ? 1 : -1; }
+    render();
+  };
+  $('#q').oninput = function () { S.q = this.value.toLowerCase(); render(); };
+  function render() {
+    var rows = data.filter(function (r) { return !S.q || (r.ciudad + ' ' + r.sistema).toLowerCase().indexOf(S.q) >= 0; });
+    rows.sort(function (a, b) {
+      var x = a[S.k], y = b[S.k];
+      if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+      return (typeof x === 'string' ? x.localeCompare(y, 'es') : x - y) * S.d;
+    });
+    document.querySelectorAll('#hd th').forEach(function (th) { th.classList.toggle('on', th.dataset.k === S.k); th.classList.toggle('asc', S.d > 0); });
+    $('#tb').innerHTML = rows.map(function (r) {
+      var seg = function (c, p) { return '<span class="' + c + '" style="width:' + p + '%">' + (p >= 9 ? Math.round(p) + ' %' : '') + '</span>'; };
+      return '<tr><td><a class="nm" href="' + r.id + '/">' + esc(r.ciudad) + '</a>' + (r.catastro === 'foral' ? '<span class="tag">foral</span>' : '') + '<span class="ct">' + esc(r.sistema) + '</span></td>' +
+        '<td>' + nf(r.poblacion) + '</td><td>' + nf(r.estaciones) + '</td><td>' + nf(r.hab_por_estacion) + '</td><td>' + nf(r.est_10k, 1) + '</td>' +
+        '<td class="l"><div class="bar" title="' + nf(r.pct_v, 1) + ' % · ' + nf(r.pct_a, 1) + ' % · ' + nf(r.pct_r, 1) + ' %">' + seg('v', r.pct_v) + seg('a', r.pct_a) + seg('r', r.pct_r) + '</div></td>' +
+        '<td><b>' + nf(r.pct_v, 1) + ' %</b></td><td>' + nf(r.pct_r, 1) + ' %</td><td>' + (r.nuevas_80 == null ? '—' : r.nuevas_80 === 0 ? 'ya' : nf(r.nuevas_80)) + '</td></tr>';
+    }).join('');
+    $('#cnt').textContent = rows.length + ' de ' + data.length + ' sistemas';
+  }
+  fetch('sistemas.json').then(function (r) { return r.json(); }).then(function (j) {
+    data = j.sistemas;
+    var P = 0, V = 0, R = 0, E = 0; data.forEach(function (r) { P += r.poblacion; V += r.pob_v; R += r.pob_r; E += r.estaciones; });
+    var best = data.slice().sort(function (a, b) { return b.pct_v - a.pct_v; })[0];
+    $('#kpis').innerHTML = [
+      ['Sistemas', nf(data.length), nf(E) + ' estaciones'],
+      ['Población analizada', nf(P / 1e6, 1) + ' M', 'en ' + data.length + ' municipios'],
+      ['A menos de 250 m', nf(100 * V / P, 1) + ' %', nf(V) + ' personas'],
+      ['A más de 500 m', nf(100 * R / P, 1) + ' %', nf(R) + ' personas'],
+      ['Mayor cobertura', best ? esc(best.ciudad) : '—', best ? nf(best.pct_v, 1) + ' % a < 250 m' : '']
+    ].map(function (k) { return '<div class="kpi"><div class="l">' + k[0] + '</div><div class="kv">' + k[1] + '</div><div class="s">' + k[2] + '</div></div>'; }).join('');
+    $('#ft').textContent = 'Datos generados el ' + new Date(j.generado).toLocaleDateString('es-ES') + '. Población: INE, Censo anual de población a 1 de enero de 2025.';
+    render();
+  }).catch(function () { $('#tb').innerHTML = '<tr><td colspan="9">No se pudieron cargar los datos.</td></tr>'; });
+})();
+</script>
+</body>
+</html>

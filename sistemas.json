@@ -1,0 +1,480 @@
+{
+ "sistemas": [
+  {
+   "id": "madrid",
+   "sistema": "BiciMAD",
+   "ciudad": "Madrid",
+   "ine": "28079",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "28900-MADRID"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://madrid.publicbikesystem.net/customer/gbfs/v2/en/station_information"
+   },
+   "osm": "europe/spain/comunidad_de_madrid",
+   "limites": {
+    "tipo": "madrid"
+   },
+   "epsg": 25830,
+   "kmax": 1000
+  },
+  {
+   "id": "barcelona",
+   "sistema": "Bicing",
+   "ciudad": "Barcelona",
+   "ine": "08019",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "08900-BARCELONA"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://barcelona-sp.publicbikesystem.net/customer/gbfs/v2/en/station_information"
+   },
+   "osm": "europe/spain/catalunya/barcelona",
+   "limites": {
+    "tipo": "barcelona"
+   },
+   "epsg": 25831,
+   "kmax": 500
+  },
+  {
+   "id": "zaragoza",
+   "sistema": "Bizi",
+   "ciudad": "Zaragoza",
+   "ine": "50297",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "50900-ZARAGOZA"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://zaragoza.publicbikesystem.net/customer/gbfs/v2/en/station_information"
+   },
+   "osm": "europe/spain/aragon/zaragoza",
+   "limites": {
+    "tipo": "capas",
+    "fuente": "Ayuntamiento de Zaragoza (IDEZar): distritos municipales y juntas municipales y vecinales",
+    "url_fuente": "https://www.zaragoza.es/sede/portal/datos-abiertos/servicio/catalogo/3964",
+    "distritos": {
+     "url": "https://idezar-sig.zaragoza.es/servicios/geoserver/urbanismo/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&outputFormat=application%2Fjson&typeName=urbanismo:Distritos_Municipales",
+     "ext": "json",
+     "cod": "referencia",
+     "nombre": "nombre"
+    },
+    "barrios": {
+     "url": "https://idezar-sig.zaragoza.es/servicios/geoserver/urbanismo/wfs?SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature&outputFormat=application%2Fjson&typeName=urbanismo:Juntas_Municipales_Vecinales",
+     "ext": "json",
+     "cod": "referencia",
+     "nombre": "nombre",
+     "distrito": "referencia_distrito",
+     "filtro": "codigo == codigo",
+     "capitalizar": true
+    }
+   },
+   "epsg": 25830,
+   "kmax": 500
+  },
+  {
+   "id": "valencia",
+   "sistema": "Valenbisi",
+   "ciudad": "València",
+   "ine": "46250",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "46900-VALENCIA"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://api.cyclocity.fr/contracts/valence/gbfs/v2/station_information.json"
+   },
+   "osm": "europe/spain/comunitat_valenciana/valencia",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 500
+  },
+  {
+   "id": "sevilla",
+   "sistema": "Sevici",
+   "ciudad": "Sevilla",
+   "ine": "41091",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "41900-SEVILLA"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://api.cyclocity.fr/contracts/seville/gbfs/v2/station_information.json"
+   },
+   "osm": "europe/spain/andalucia/sevilla",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 500
+  },
+  {
+   "id": "elche",
+   "sistema": "Bicielx",
+   "ciudad": "Elche",
+   "ine": "03065",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "03065-ELCHE ELX"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicielx"
+   },
+   "osm": "europe/spain/comunitat_valenciana/alicante",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "palma",
+   "sistema": "Bicipalma",
+   "ciudad": "Palma",
+   "ine": "07040",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "07040-PALMA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicipalma"
+   },
+   "osm": "europe/spain/illes_balears",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25831,
+   "kmax": 400
+  },
+  {
+   "id": "valladolid",
+   "sistema": "BIKI",
+   "ciudad": "Valladolid",
+   "ine": "47186",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "47900-VALLADOLID"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "biki"
+   },
+   "osm": "europe/spain/castilla_y_leon/valladolid",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "coruna",
+   "sistema": "BiciCoruña",
+   "ciudad": "A Coruña",
+   "ine": "15030",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "15900-A CORUÑA"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://acoruna.publicbikesystem.net/customer/gbfs/v2/gl/station_information"
+   },
+   "osm": "europe/spain/galicia/la_coruna",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25829,
+   "kmax": 400
+  },
+  {
+   "id": "donostia",
+   "sistema": "Dbizi",
+   "ciudad": "Donostia / San Sebastián",
+   "ine": "20069",
+   "catastro": {
+    "tipo": "gipuzkoa"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://sansebastian.publicbikesystem.net/customer/gbfs/v2/eu/station_information"
+   },
+   "osm": "europe/spain/euskadi/guipuzcoa",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 200
+  },
+  {
+   "id": "bilbao",
+   "sistema": "Bilbaobizi",
+   "ciudad": "Bilbao",
+   "ine": "48020",
+   "catastro": {
+    "tipo": "bizkaia",
+    "mun": "020"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://bilbao.publicbikesystem.net/customer/gbfs/v2/eu/station_information"
+   },
+   "osm": "europe/spain/euskadi/vizcaya",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 200
+  },
+  {
+   "id": "laspalmas",
+   "sistema": "Sítycleta",
+   "ciudad": "Las Palmas de Gran Canaria",
+   "ine": "35016",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "35017-LAS PALMAS DE GRAN CANARIA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "sitycleta-las-palmas-las-palmas-de-gran-canaria"
+   },
+   "osm": "africa/spain/canarias",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25828,
+   "kmax": 400
+  },
+  {
+   "id": "castellon",
+   "sistema": "Bicicas",
+   "ciudad": "Castelló de la Plana",
+   "ine": "12040",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "12900-CASTELLO DE LA PLANA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicicas"
+   },
+   "osm": "europe/spain/comunitat_valenciana/castellon",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "leon",
+   "sistema": "León (nextbike)",
+   "ciudad": "León",
+   "ine": "24089",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "24900-LEON"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "alsa-nextbike-leon"
+   },
+   "osm": "europe/spain/castilla_y_leon/leon",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "gijon",
+   "sistema": "Gijón Bici",
+   "ciudad": "Gijón",
+   "ine": "33024",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "52024-GIJON"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "gijon"
+   },
+   "osm": "europe/spain/asturias",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "santander",
+   "sistema": "TUeBICI",
+   "ciudad": "Santander",
+   "ine": "39075",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "39900-SANTANDER"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "tuebici"
+   },
+   "osm": "europe/spain/cantabria",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 200
+  },
+  {
+   "id": "girona",
+   "sistema": "Girocleta",
+   "ciudad": "Girona",
+   "ine": "17079",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "17085-GIRONA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "girocleta"
+   },
+   "osm": "europe/spain/catalunya/girona",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25831,
+   "kmax": 200
+  },
+  {
+   "id": "logrono",
+   "sistema": "BiciLog",
+   "ciudad": "Logroño",
+   "ine": "26089",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "26900-LOGROÑO"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicilog"
+   },
+   "osm": "europe/spain/la_rioja",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 200
+  },
+  {
+   "id": "albacete",
+   "sistema": "AlbaBici",
+   "ciudad": "Albacete",
+   "ine": "02003",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "02900-ALBACETE"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "albabici"
+   },
+   "osm": "europe/spain/castilla_la_mancha/albacete",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 400
+  },
+  {
+   "id": "badajoz",
+   "sistema": "BiBa",
+   "ciudad": "Badajoz",
+   "ine": "06015",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "06900-BADAJOZ"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "biba"
+   },
+   "osm": "europe/spain/extremadura/badajoz",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25829,
+   "kmax": 400
+  },
+  {
+   "id": "reus",
+   "sistema": "Ganxeta",
+   "ciudad": "Reus",
+   "ine": "43123",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "43125-REUS"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "ganxeta-reus"
+   },
+   "osm": "europe/spain/catalunya/tarragona",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25831,
+   "kmax": 200
+  },
+  {
+   "id": "vitoria",
+   "sistema": "MugiBIKE",
+   "ciudad": "Vitoria-Gasteiz",
+   "ine": "01059",
+   "catastro": {
+    "tipo": "araba",
+    "mun": "0159"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://gbfs.partners.fifteen.eu/gbfs/2.2/vitoria/en/station_information.json"
+   },
+   "osm": "europe/spain/euskadi/alava",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 200
+  },
+  {
+   "id": "rivas",
+   "sistema": "BiciNRivas",
+   "ciudad": "Rivas-Vaciamadrid",
+   "ine": "28123",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "28123-RIVAS VACIAMADRID"
+   },
+   "estaciones": {
+    "tipo": "gbfs",
+    "url": "https://rivas.publicbikesystem.net/customer/gbfs/v2/en/station_information"
+   },
+   "osm": "europe/spain/comunidad_de_madrid",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 100
+  }
+ ]
+}
