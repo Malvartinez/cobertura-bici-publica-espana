@@ -42,7 +42,14 @@ fu = [{"nombre": f"{CFG['sistema']}: estaciones ({est['fuente']})", "url": est["
       {"nombre": cat["fuente"], "url": cat["url"], "fecha_descarga": cat["fecha_descarga"], "referencia": (cat["fecha_datos"] or "")[:10]},
       {"nombre": "OpenStreetMap (red peatonal), extracto de download.openstreetmap.fr", "url": "https://www.openstreetmap.org", "fecha_descarga": osm["fecha_descarga"], "referencia": (osm.get("fecha_datos") or "")[:10]}]
 mu = gpd.read_file(P + "municipio.gpkg").to_crs(4326)
-c = mu.geometry.iloc[0].centroid; bx = [round(float(v), 5) for v in mu.total_bounds]
+c = mu.geometry.iloc[0].centroid
+# encuadre inicial: zona con edificios habitados (el termino puede incluir islas o monte lejanos, p. ej. Columbretes)
+ep = gpd.read_parquet(P + "edificios_poblacion.parquet"); ep = ep[ep.poblacion > 0].to_crs(4326)
+if len(ep):  # 99 % central de los edificios habitados (descarta diseminados lejanos)
+    xs, ys = ep.geometry.x, ep.geometry.y
+    bx = [round(float(v), 5) for v in (xs.quantile(.005), ys.quantile(.005), xs.quantile(.995), ys.quantile(.995))]
+else:
+    bx = [round(float(v), 5) for v in mu.total_bounds]
 niveles = ["secciones"] + (["barrios"] if len(bar) else []) + ["distritos"]
 json.dump({"generado": hoy, "sistema": CFG["sistema"], "ciudad": CFG["ciudad"], "id": SIS, "centro": [round(c.x, 5), round(c.y, 5)], "bbox": bx,
            "niveles": niveles, "cortes_poblacion_edificio": CORTES, "parametros": {"umbral_verde": 250, "umbral_amarillo": 500, "corte": 1500}, "fuentes": fu},

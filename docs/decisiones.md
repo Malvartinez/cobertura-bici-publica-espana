@@ -39,3 +39,9 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 
 - Catastro corta conexiones de forma intermitente: todas las descargas tienen reintentos y se comprueba que el ZIP sea válido.
 - Los feeds ATOM provinciales del Catastro pueden venir en Latin-1 (A Coruña, Logroño, con «Ñ» en la ruta): se decodifican como tal antes de extraer la URL.
+
+## Web
+
+- `.gitignore` anclado a la raíz (`/data/`) — el patrón `data/` excluía también `web/<sistema>/data/` y la primera publicación salió sin datos en las 23 páginas.
+- Encuadre inicial del mapa = 99 % central de los edificios habitados, no el término municipal — Castellón (islas Columbretes), Palma (Cabrera) y los municipios con mucho diseminado rural arrancaban demasiado alejados.
+- Si la vista guardada en la URL (`#zoom/lat/lon`) cae fuera de la ciudad, se descarta — una recarga durante el arranque del mapa podía dejar `#8/0/0` y el mapa en blanco en las recargas siguientes.

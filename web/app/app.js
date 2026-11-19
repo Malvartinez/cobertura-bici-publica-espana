@@ -563,7 +563,15 @@
   };
 
   // ---------- arranque ----------
+  // descarta una vista de la URL que caiga fuera de la ciudad (p. ej. #8/0/0 de una recarga a medias)
+  function hashValida() {
+    var m = location.hash.match(/^#([\d.]+)\/(-?[\d.]+)\/(-?[\d.]+)/), b = meta.bbox;
+    if (!m || !b) return true;
+    var lat = +m[2], lon = +m[3], dx = b[2] - b[0], dy = b[3] - b[1];
+    return lon > b[0] - dx && lon < b[2] + dx && lat > b[1] - dy && lat < b[3] + dy;
+  }
   function init() {
+    if (!hashValida()) try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { location.hash = ''; }
     map = new maplibregl.Map({ container: 'map', style: STYLES[S.theme], bounds: meta.bbox || [-9.5, 36, 3.5, 43.8], fitBoundsOptions: { padding: 20 }, minZoom: 8, hash: true, attributionControl: { compact: true } });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.on('style.load', addAll);
