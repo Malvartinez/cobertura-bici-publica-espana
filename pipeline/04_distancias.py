@@ -23,25 +23,12 @@ vs = N + np.arange(S)
 G = sp.coo_matrix((np.r_[L, sd], (np.r_[U, vs], np.r_[V, sn])), shape=(N + S, N + S)).tocsr()
 D, pred, src = dijkstra(G, directed=False, indices=vs, min_only=True, limit=1600, return_predecessors=True)
 D = D[:N]; src = src[:N]  # src: indice del nodo virtual de origen
-# edificios
-geoms = ed.geometry.values; stree = STRtree(geoms)
-pts = bld.geometry.values
-qi, dist = stree.query_nearest(pts, return_distance=True, all_matches=False)
-eg = np.empty(len(pts), dtype=int); eg[qi[0]] = qi[1]
-dp = np.empty(len(pts)); dp[qi[0]] = dist
-line = geoms[eg]; ln = shapely.length(line)
-proj = shapely.line_locate_point(line, pts)
-t = np.where(ln > 0, proj / ln, 0)
-st = shapely.get_point(line, 0)
-sx, sy = shapely.get_x(st), shapely.get_y(st)
-u = U[eg]; v = V[eg]; Le = L[eg]
-du = np.hypot(nx_[u] - sx, ny_[u] - sy); dv = np.hypot(nx_[v] - sx, ny_[v] - sy)
-start = np.where(du <= dv, u, v); end = np.where(du <= dv, v, u)
-a = t * Le; b = (1 - t) * Le
-ds = D[start] + a; de = D[end] + b
-us = ds <= de
-tot = dp + np.where(us, ds, de)
-s_ = src[np.where(us, start, end)]
+# edificios: mejor opcion de acceso (punto interior enganchado a la arista o nodo a <= 30 m de la huella)
+from _acceso import accesos, RADIO
+ob, on, oo, ini, dp = accesos(P, bld, ed, U, V, L, nx_, ny_)
+val = D[on] + oo
+o = np.lexsort((val, ob)); first = o[ini]          # opcion ganadora de cada edificio
+tot = val[first]; s_ = src[on[first]]
 ok = np.isfinite(tot) & (tot <= 1500) & (s_ >= N)
 dist_f = np.where(ok, tot, np.nan)
 bi = np.where(ok, s_ - N, -1)
@@ -63,8 +50,10 @@ nid = nod.node_id.values
 for j in range(S): g.add_edge(("S", j), int(nid[sn[j]]), weight=float(sd[j]))
 errs = []
 for i in sm:
-    g.add_edge("B", int(nid[start[i]]), weight=float(dp[i] + a[i]))
-    g.add_edge("B", int(nid[end[i]]), weight=float(dp[i] + b[i]))
+    k0 = ini[i]; k1 = ini[i + 1] if i + 1 < len(ini) else len(ob)
+    for k in range(k0, k1):
+        nk = int(nid[on[k]])
+        if not g.has_edge("B", nk) or g["B"][nk]["weight"] > oo[k]: g.add_edge("B", nk, weight=float(oo[k]))
     dd = nx.single_source_dijkstra_path_length(g, "B", cutoff=3000)
     ref = min(dd.get(("S", j), np.inf) for j in range(S))
     errs.append(abs(ref - dist_f[i]) / ref)
@@ -73,7 +62,7 @@ errs = np.array(errs); n_ok = int((errs <= 0.05).sum())
 print("validacion", n_ok, "/50 max err", errs.max())
 open(DOCS + "validacion_distancias.md", "w", encoding="utf-8").write(f"""# Validacion de distancias
 
-Muestra aleatoria de 50 edificios (semilla 42) con distancia finita; ruta individual recalculada con networkx (Dijkstra desde un nodo temporal del edificio hacia los nodos virtuales de estaciones, mismas aristas y pesos de enganche).
+Muestra aleatoria de 50 edificios (semilla 42) con distancia finita; ruta individual recalculada con networkx (Dijkstra desde un nodo temporal del edificio, unido a todas sus opciones de acceso -extremos de la arista enganchada y nodos a <= 30 m de la huella-, hacia los nodos virtuales de estaciones, mismas aristas y pesos de enganche).
 
 - Coinciden dentro del 5 %: **{n_ok}/50**
 - Error relativo maximo: **{errs.max()*100:.4f} %**

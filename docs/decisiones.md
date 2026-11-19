@@ -40,6 +40,12 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 - Catastro corta conexiones de forma intermitente: todas las descargas tienen reintentos y se comprueba que el ZIP sea válido.
 - Los feeds ATOM provinciales del Catastro pueden venir en Latin-1 (A Coruña, Logroño, con «Ñ» en la ruta): se decodifican como tal antes de extraer la URL.
 
+## Distancia desde el borde del edificio (2026-11-19)
+
+- La distancia de cada edificio es la de su mejor punto de acceso: los dos extremos de la arista más cercana a su punto interior o cualquier nodo de la red a ≤ 30 m de su huella, sumando la distancia del nodo al borde (`pipeline/_acceso.py`, usado por 04, 07 y 08). Es el criterio del proyecto BicinRivas (ADR-0126) — con el punto interior, en las manzanas grandes el enganche caía en la calle de atrás y el resultado era claramente pesimista (Rivas 28,3 % frente al 51,4 % de BicinRivas). Es algo optimista: supone que el portal da a la calle más favorable.
+- Se sigue sumando el tramo de la estación al nodo más cercano de la red (BicinRivas no lo suma): son metros que se andan. Con el nuevo criterio Rivas queda en 43,6 %; la diferencia restante con BicinRivas se debe a ese tramo (~3 puntos) y a la red OSM (otra descarga y fecha; BicinRivas mide hasta nodos y no hasta el punto exacto de la arista).
+- Los repositorios de Madrid y Barcelona se actualizan con el mismo criterio.
+
 ## Web
 
 - `.gitignore` anclado a la raíz (`/data/`) — el patrón `data/` excluía también `web/<sistema>/data/` y la primera publicación salió sin datos en las 23 páginas.

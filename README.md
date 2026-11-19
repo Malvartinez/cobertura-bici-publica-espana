@@ -45,7 +45,9 @@ licitación), Murcia y Burgos. Detalle en [`docs/decisiones.md`](docs/decisiones
 
 1. Reparto de la población de cada sección censal entre sus edificios residenciales, proporcional al número de
    viviendas (la suma cuadra exactamente con el censo).
-2. Enganche de cada edificio a la arista peatonal más cercana y de cada estación al nodo más cercano.
+2. Acceso de cada edificio a la red por su mejor punto: la arista más cercana a su punto interior o cualquier nodo a
+   30 m o menos de su huella, sumando la distancia hasta el borde (mismo criterio que BicinRivas). Cada estación se
+   engancha al nodo más cercano, sumando esa distancia.
 3. Dijkstra multiorigen desde todas las estaciones, con corte a 1.500 m.
 4. Agregados por municipio, distrito, barrio y sección; ranking de estaciones (Dijkstra desde cada una, corte 500 m).
 5. Ampliación: algoritmo voraz con evaluación perezosa (CELF) sobre los nodos de la red (uno por celda de 50 m),

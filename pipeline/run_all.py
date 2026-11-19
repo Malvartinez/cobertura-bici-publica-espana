@@ -12,7 +12,13 @@ fallos = []
 for s in sis:
     os.makedirs(os.path.join(R, "logs"), exist_ok=True)
     with open(os.path.join(R, "logs", s + ".log"), "w", encoding="utf-8") as log:
-        for p in (PASOS[PASOS.index(desde):] if desde else PASOS):
+        pasos = PASOS[PASOS.index(desde):] if desde else PASOS
+        if "04_distancias" in pasos:  # las distancias cambian: la cobertura cacheada de la ampliacion ya no vale
+            from pathlib import Path
+            pr = Path(R) / "data" / s / "processed"
+            for f in list(pr.glob("ampliacion_cobertura_*.npz")) + [pr / "ampliacion_resultado.pkl"]:
+                if f.exists(): f.unlink()
+        for p in pasos:
             t0 = time.time(); print(f"== {s} · {p}", flush=True)
             r = subprocess.run([sys.executable, os.path.join(D, p + ".py")], cwd=R, env={**os.environ, "SISTEMA": s},
                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
