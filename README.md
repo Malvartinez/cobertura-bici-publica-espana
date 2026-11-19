@@ -36,8 +36,8 @@ licitación), Murcia y Burgos. Detalle en [`docs/decisiones.md`](docs/decisiones
   de secciones censales 2025.
 - **Edificios**: Catastro INSPIRE Buildings (DG del Catastro). En Bilbao, Donostia y Vitoria, los catastros forales de
   Bizkaia, Gipuzkoa y Álava.
-- **Zonas**: barrios oficiales del ayuntamiento cuando se han podido descargar (Madrid, Barcelona, Zaragoza); en el
-  resto, distritos censales del INE.
+- **Zonas**: barrios oficiales del ayuntamiento cuando se han podido descargar (Madrid, Barcelona, Zaragoza, València y
+  Sevilla); en el resto, distritos censales del INE.
 - **Red peatonal**: OpenStreetMap, extractos de download.openstreetmap.fr con el filtro `network_type="walk"` de OSMnx.
 - **Mapa base**: CARTO.
 

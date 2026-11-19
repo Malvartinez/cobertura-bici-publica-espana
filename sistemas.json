@@ -92,7 +92,22 @@
    },
    "osm": "europe/spain/comunitat_valenciana/valencia",
    "limites": {
-    "tipo": "ine"
+    "tipo": "capas",
+    "fuente": "Ajuntament de València, geoportal (OPENDATA/UrbanismoEInfraestructuras): distritos y barrios",
+    "url_fuente": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer",
+    "distritos": {
+     "url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/225/query?where=1%3D1&outFields=*&f=geojson&outSR=4326",
+     "cod": "coddistrit",
+     "nombre": "nombre",
+     "capitalizar": true
+    },
+    "barrios": {
+     "url": "https://geoportal.valencia.es/server/rest/services/OPENDATA/UrbanismoEInfraestructuras/MapServer/224/query?where=1%3D1&outFields=*&f=geojson&outSR=4326",
+     "cod": "coddistbar",
+     "nombre": "nombre",
+     "distrito": "coddistrit",
+     "capitalizar": true
+    }
    },
    "epsg": 25830,
    "kmax": 500
@@ -112,7 +127,17 @@
    },
    "osm": "europe/spain/andalucia/sevilla",
    "limites": {
-    "tipo": "ine"
+    "tipo": "capas",
+    "fuente": "Ayuntamiento de Sevilla, IDE Sevilla (Gerencia de Urbanismo): barrios; distritos como unión de sus barrios",
+    "url_fuente": "https://opendata.esri.es/datasets/ideSEVILLA::barrios/about",
+    "barrios": {
+     "url": "https://services1.arcgis.com/hcmP7kr0Cx3AcTJk/arcgis/rest/services/Barrios_de_Sevilla/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson&outSR=4326",
+     "cod": "FID",
+     "nombre": "Barrio",
+     "distrito": "DISTRITO",
+     "distrito_nombre": "DISTRITO_N",
+     "capitalizar": true
+    }
    },
    "epsg": 25830,
    "kmax": 500

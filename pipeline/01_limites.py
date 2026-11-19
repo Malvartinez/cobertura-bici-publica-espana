@@ -51,15 +51,26 @@ elif T == "capas":
         g = zipshp(c["url"], nivel) if c.get("formato") == "zipshp" else descarga(c["url"], nivel + "." + c.get("ext", "geojson"))
         if c.get("filtro"): g = g.query(c["filtro"])
         return g
+    import re
+    MIN = r"(?<!^)(?<!-)\b(De|Del|La|Las|Los|El|Y|En|Els|Dels|Les|Al)\b"
+    def nombres(serie, capitalizar):
+        n = serie.astype(str).str.strip()
+        if capitalizar:  # nombres en mayusculas en origen: "SANT MARCEL.LI" -> "Sant Marcel·lí" no; se respeta la grafia salvo l.l -> l·l
+            n = n.str.title().str.replace(MIN, lambda m: m.group(1).lower(), regex=True)
+            n = n.str.replace(r"([Ll])\.[Ll]", lambda m: m.group(1) + "·l", regex=True)  # ela geminada: MARCEL.LI -> Marcel·li
+            n = n.str.replace(r"(?<=\s)([LD])'", lambda m: m.group(1).lower() + "'", regex=True)  # "de L'Oest" -> "de l'Oest"
+        return n.values
     if "distritos" in L:
         c = L["distritos"]; d = capa(c, "distritos")
-        dis = gpd.GeoDataFrame({"cod_distrito": cod(d[c["cod"]]), "nombre": d[c["nombre"]].astype(str).str.strip().values}, geometry=d.geometry.values, crs=CRS)
+        dis = gpd.GeoDataFrame({"cod_distrito": cod(d[c["cod"]]), "nombre": nombres(d[c["nombre"]], c.get("capitalizar"))}, geometry=d.geometry.values, crs=CRS)
     if "barrios" in L:
         c = L["barrios"]; b = capa(c, "barrios")
-        nom = b[c["nombre"]].astype(str).str.strip()
-        if c.get("capitalizar"): nom = nom.str.title().str.replace(r"(?<!^)\b(De|Del|La|Las|Los|El|Y)\b", lambda m: m.group(1).lower(), regex=True)
-        bar = gpd.GeoDataFrame({"cod_barrio": cod(b[c["cod"]], c.get("ancho", 3)), "nombre": nom.values,
+        codb = cod(b[c["cod"]], c.get("ancho", 3))
+        bar = gpd.GeoDataFrame({"cod_barrio": codb, "nombre": nombres(b[c["nombre"]], c.get("capitalizar")),
                                 "cod_distrito": cod(b[c["distrito"]]) if c.get("distrito") else None}, geometry=b.geometry.values, crs=CRS)
+        if dis is None and c.get("distrito_nombre"):  # distritos = union de sus barrios (codigo y nombre oficiales en la capa de barrios)
+            dis = gpd.GeoDataFrame({"cod_distrito": cod(b[c["distrito"]]), "nombre": nombres(b[c["distrito_nombre"]], False)},
+                                   geometry=b.geometry.values, crs=CRS)
     fuente, url_fuente = L["fuente"], L["url_fuente"]
 
 if dis is None:  # distritos censales del INE
