@@ -56,3 +56,16 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 - Si la vista guardada en la URL (`#zoom/lat/lon`) cae fuera de la ciudad, se descarta — una recarga durante el arranque del mapa podía dejar `#8/0/0` y el mapa en blanco en las recargas siguientes.
 - Móvil (≤ 800 px): la página se desplaza con normalidad, con el mapa arriba (58 % de la altura visible) y el panel completo debajo, con las pestañas fijas — con alto fijo de pantalla el panel quedaba en un 45 % sin poder desplazarse y la barra del navegador tapaba el final. Al pulsar «Simular ampliación» se baja al simulador; al tocar una zona, estación o propuesta se sube al mapa.
 - Botón destacado «Simula una ampliación del sistema» en la barra superior, en el rosa de las estaciones propuestas; con el simulador abierto pasa a «Volver al análisis».
+
+## Ampliación a todos los sistemas municipales (2026-11-19)
+
+- Se añaden los sistemas municipales con estaciones fijas y al menos 3 estaciones que faltaban, a partir del inventario de CityBikes y asignando cada sistema al municipio donde caen sus estaciones: Boadilla del Monte, Torrent, Avilés, Sant Vicent del Raspeig, Mislata, Vilagarcía de Arousa, Arteixo, Castro-Urdiales, Aller, A Illa de Arousa y Villarcayo (34 en total).
+- Siguen fuera: los metropolitanos (AMBici, Bizkaibizi, MIBISI, ENKbike en Enkarterri, Clunia Volve, y BiciFerrolTerra, con la mitad de las estaciones en Ferrol y la otra mitad en Narón); los de bicis sin estación (Dott, Lovesharing); Pamplona (suspendido) y los de 1 o 2 estaciones (Burgos, Betanzos, Alcázar de San Juan, Campoo de Enmedio, Cenicientos, Medina de Pomar, Caldas de Reis), donde el porcentaje no dice nada del sistema.
+- Aller, A Illa de Arousa y Villarcayo son redes rurales o turísticas con una estación por núcleo de población (pedanías, pueblos de montaña, playas): su cobertura es baja por diseño, no por un error de datos (comprobado estación a estación).
+- Mislata tiene 6 de sus 21 estaciones dentro del término de València (en el borde); como en Madrid, se conservan y cuentan para la población de Mislata que vive cerca.
+- Tamaño: los 11 sistemas añaden unos 15 MB a la web; el repositorio ronda los 230 MB (límite recomendado de GitHub: 1 GB; límite de la web publicada: 1 GB).
+- `08_ampliacion.py` valida con k = 0, min(100, K) y K: con simuladores de menos de 100 estaciones fallaba.
+
+## Página matriz: mapa de sistemas
+
+- Mapa con un punto por sistema, en el centro de su término: color según % de población a menos de 250 m (misma escala que las coropletas de cada ciudad) y radio proporcional a la raíz de la población (área proporcional a la población). Canarias va en un recuadro aparte para no reducir la península. Al pasar el ratón muestra los datos, al hacer clic abre el sistema y al pasar por una fila de la tabla se resalta su punto.

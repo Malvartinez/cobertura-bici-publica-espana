@@ -118,7 +118,7 @@ def coverage(nodes):
     lev = np.where(~np.isfinite(tot), 2, np.where(tot < 250, 0, np.where(tot <= 500, 1, 2)))
     return [pop[lev == k].sum() for k in range(3)]
 val = []; vmax = 0
-for k in (0, 100, K):
+for k in sorted({0, min(100, K), K}):
     c = coverage(np.array([p[0] for p in picks[:k]], dtype=int)); g = (tv[k], ta[k], tr[k])
     d = max(abs(x - y) for x, y in zip(c, g)); vmax = max(vmax, d)
     val.append(f"| {k} | {c[0]:.2f} / {c[1]:.2f} / {c[2]:.2f} | {g[0]:.2f} / {g[1]:.2f} / {g[2]:.2f} | {d:.4f} |")

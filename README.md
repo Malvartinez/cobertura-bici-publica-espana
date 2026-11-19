@@ -1,6 +1,6 @@
 # Cobertura de la bici pública en España
 
-Calcula, para los sistemas de bicicleta pública de las grandes ciudades españolas, qué población vive a menos de
+Calcula, para los sistemas municipales de bicicleta pública de España, qué población vive a menos de
 250 m (verde), entre 250 y 500 m (amarillo) o a más de 500 m (rojo) andando de la estación más cercana. Las
 distancias se miden sobre la red peatonal real, no en línea recta. Una página matriz compara todos los sistemas y
 enlaza a la web de cada uno, con mapa, rankings de zonas y estaciones y un simulador de ampliación.
@@ -12,19 +12,28 @@ Amplía a todo el país los análisis de [Madrid](https://github.com/Malvartinez
 
 ## Sistemas incluidos
 
-23 sistemas con estaciones fijas de capitales de provincia y municipios de más de 100.000 habitantes, más
-BiciNRivas: BiciMAD (Madrid), Bicing (Barcelona), Bizi (Zaragoza), Valenbisi (València), Sevici (Sevilla), Bicielx
-(Elche), Bicipalma (Palma), BIKI (Valladolid), BiciCoruña (A Coruña), Dbizi (Donostia), Bilbaobizi (Bilbao),
-Sítycleta (Las Palmas de Gran Canaria), Bicicas (Castelló), nextbike (León), Gijón Bici, TUeBICI (Santander),
-Girocleta (Girona), BiciLog (Logroño), AlbaBici (Albacete), BiBa (Badajoz), Ganxeta (Reus), MugiBIKE
-(Vitoria-Gasteiz) y BiciNRivas (Rivas-Vaciamadrid).
+34 sistemas municipales con estaciones fijas.
 
-Quedan fuera los sistemas metropolitanos, los que no tienen estaciones, Pamplona (suspendido), Málaga (en
-licitación), Murcia y Burgos. Detalle en [`docs/decisiones.md`](docs/decisiones.md).
+- **Ciudades grandes** (capitales de provincia y municipios de más de 100.000 habitantes): BiciMAD (Madrid), Bicing
+  (Barcelona), Bizi (Zaragoza), Valenbisi (València), Sevici (Sevilla), Bicielx (Elche), Bicipalma (Palma), BIKI
+  (Valladolid), BiciCoruña (A Coruña), Dbizi (Donostia), Bilbaobizi (Bilbao), Sítycleta (Las Palmas de Gran
+  Canaria), Bicicas (Castelló), nextbike (León), Gijón Bici, TUeBICI (Santander), Girocleta (Girona), BiciLog
+  (Logroño), AlbaBici (Albacete), BiBa (Badajoz), Ganxeta (Reus) y MugiBIKE (Vitoria-Gasteiz).
+- **Resto de sistemas municipales con al menos 3 estaciones**: BiciNRivas (Rivas-Vaciamadrid), bibo (Boadilla del
+  Monte), TorrentBici (Torrent), Avilés en Bici, Bicisanvi (Sant Vicent del Raspeig), BiciMislata (Mislata), VaiBike
+  (Vilagarcía de Arousa), biciArteixo (Arteixo), BiciCastro (Castro-Urdiales), BeALLER (Aller), BiciArousa (A Illa
+  de Arousa) y Vive Villarcayo (Villarcayo). Los tres últimos son redes rurales o turísticas con una estación por
+  núcleo, de ahí su baja cobertura.
+
+Quedan fuera los sistemas metropolitanos (AMBici, Bizkaibizi, MIBISI, ENKbike, Clunia Volve, BiciFerrolTerra), los
+que no tienen estaciones fijas (Dott, Lovesharing), Pamplona (suspendido), Málaga (en licitación), Murcia y los de
+1 o 2 estaciones (Burgos, Betanzos, Alcázar de San Juan, Campoo de Enmedio, Cenicientos, Medina de Pomar, Caldas
+de Reis). Detalle en [`docs/decisiones.md`](docs/decisiones.md).
 
 ## Qué ofrece la web
 
-- **Página matriz**: tabla ordenable con población, estaciones, habitantes por estación, reparto verde/amarillo/rojo
+- **Página matriz**: mapa con un punto por sistema (color según % de población a menos de 250 m, tamaño según
+  población) y tabla ordenable con población, estaciones, habitantes por estación, reparto verde/amarillo/rojo
   y estaciones nuevas necesarias para llegar al 80 % de la población a menos de 250 m.
 - **Página de cada sistema**: coropleta por sección censal, barrio o distrito; edificios del Catastro coloreados por
   nivel a partir de zoom 14; ranking de zonas y de estaciones; simulador de ampliación; tabla descargable en CSV.

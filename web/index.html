@@ -4,11 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cobertura bici pública</title>
-<meta name="description" content="Comparativa de la población que vive a menos de 250 m, entre 250 y 500 m o a más de 500 m andando de una estación de los sistemas de bicicleta pública de las grandes ciudades españolas.">
+<meta name="description" content="Comparativa de la población que vive a menos de 250 m, entre 250 y 500 m o a más de 500 m andando de una estación de los sistemas municipales de bicicleta pública de España.">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem('cobertura_tema')||'dark'}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
 <style>
 :root,[data-theme=dark]{--bg:#111214;--panel:#1A1C20;--s1:#222429;--s2:#2A2D33;--b1:rgba(255,255,255,.07);--b2:rgba(255,255,255,.12);--accent:#2D8EFF;--accent-h:#5AA8FF;--tx:#E8EAED;--tx2:#9AA0A8;--tx3:#6B7079}
 [data-theme=light]{--bg:#F4F5F7;--panel:#FFFFFF;--s1:#F2F3F5;--s2:#E8EAED;--b1:rgba(0,0,0,.07);--b2:rgba(0,0,0,.12);--accent:#1F6FE0;--accent-h:#1A5FC2;--tx:#1A1C20;--tx2:#5A6069;--tx3:#8A9099}
@@ -48,6 +49,20 @@ td .nm{font-weight:600}td .ct{display:block;font-size:12px;color:var(--tx2)}
 .notes section{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px}
 .notes h2{font-size:15px;margin:0 0 6px}.notes p,.notes li{color:var(--tx2);font-size:13px}.notes ul{padding-left:18px;margin:6px 0}
 footer{color:var(--tx3);font-size:12px;margin-top:24px}
+.mapcard{position:relative;height:480px;margin:0 0 22px;overflow:hidden}
+#mapa{position:absolute;inset:0}
+.inset{position:absolute;left:12px;bottom:12px;width:190px;height:120px;border:1px solid var(--b2);border-radius:8px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.35);background:var(--s1)}
+.inset span{position:absolute;left:6px;top:4px;z-index:2;font-size:10px;color:var(--tx2);text-transform:uppercase;letter-spacing:.05em;pointer-events:none}
+#mapa-can{position:absolute;inset:0}
+.mleg{position:absolute;right:12px;top:12px;background:var(--panel);border:1px solid var(--b2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--tx2);width:180px;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.mleg b{display:block;color:var(--tx);font-size:11px;font-weight:600;margin-bottom:4px}
+.mleg .ramp{height:8px;border-radius:3px;background:linear-gradient(90deg,#c0392b,#e07b39,#e8c547,#8cc152,#2fa35a)}
+.mleg .rl{display:flex;justify-content:space-between;font-size:10px;margin:2px 0 6px}
+.mleg{width:205px}.mleg .sz{display:flex;align-items:flex-end;gap:10px;font-size:10px;white-space:nowrap}.mleg .sz span{display:inline-flex;align-items:center;gap:4px}.mleg .sz i{display:inline-block;border-radius:50%;border:1.5px solid var(--tx2)}
+.maplibregl-popup-content{background:var(--panel);color:var(--tx);border-radius:8px;padding:8px 10px;font:12px/1.4 'IBM Plex Sans',sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.35)}
+.maplibregl-popup-tip{border-top-color:var(--panel)!important;border-bottom-color:var(--panel)!important}
+.pp b{font-size:13px}.pp .m{color:var(--tx2)}
+@media (max-width:640px){.mapcard{height:400px}.inset{width:120px;height:86px}.mleg{width:auto;left:8px;right:8px;top:8px;padding:6px 8px}.mleg .rl{margin-bottom:0}.mleg .sz{display:none}}
 @media (max-width:640px){h1{font-size:21px}.tools input{min-width:0;max-width:none;flex:1 1 100%}.tools .hint{display:none}}
 </style>
 </head>
@@ -61,6 +76,12 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
     <span class="lv"><i class="v"></i>menos de 250 m</span><span class="lv"><i class="a"></i>250–500 m</span><span class="lv" style="margin-right:0"><i class="r"></i>más de 500 m</span>.
     Pulsa una ciudad para ver su mapa, sus barrios, el ranking de estaciones y el simulador de ampliación.</p>
   <div class="kpis" id="kpis"></div>
+  <div class="card mapcard" aria-label="Mapa de los sistemas analizados">
+    <div id="mapa"></div>
+    <div class="inset"><span>Canarias</span><div id="mapa-can"></div></div>
+    <div class="mleg"><b>% población a menos de 250 m</b><div class="ramp"></div><div class="rl"><span>0 %</span><span>50 %</span><span>100 %</span></div>
+      <div class="sz"><span><i style="width:8px;height:8px"></i> 100.000</span><span><i style="width:16px;height:16px"></i> 1 M</span><span><i style="width:24px;height:24px"></i> 3 M hab.</span></div></div>
+  </div>
   <div class="card">
     <div class="tools"><input id="q" type="search" placeholder="Buscar ciudad o sistema…"><span class="muted" id="cnt"></span><span class="sp"></span><span class="muted hint">Pulsa una cabecera para ordenar</span></div>
     <div class="tw"><table><thead><tr id="hd"></tr></thead><tbody id="tb"></tbody></table></div>
@@ -79,6 +100,7 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
   </div>
   <footer id="ft"></footer>
 </main>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script>
 (function () {
   var $ = function (s) { return document.querySelector(s); };
@@ -87,8 +109,54 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
   var store = { get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
   var root = document.documentElement;
   var setIcon = function () { $('#theme').textContent = root.dataset.theme === 'dark' ? '☀' : '☾'; };
-  $('#theme').onclick = function () { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('cobertura_tema', root.dataset.theme); setIcon(); };
+  $('#theme').onclick = function () { root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; store.set('cobertura_tema', root.dataset.theme); setIcon(); mapas.forEach(function (m) { m.setStyle(ESTILOS[root.dataset.theme]); }); };
   setIcon();
+  // ---------- mapa de sistemas ----------
+  var ESTILOS = { dark: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', light: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json' };
+  var mapas = [], geo = null, popup = null;
+  var COLOR = ['interpolate', ['linear'], ['get', 'pct_v'], 0, '#c0392b', 25, '#e07b39', 50, '#e8c547', 75, '#8cc152', 100, '#2fa35a'];
+  // radio proporcional a la raiz de la poblacion: 100.000 hab. = 4 px, 1 M = 8 px... (diametros de la leyenda)
+  var RADIO = ['interpolate', ['linear'], ['sqrt', ['get', 'poblacion']], 0, 2, 316, 4, 1000, 8, 1732, 12];
+  function capas(m) {
+    if (!m.getSource('sis')) m.addSource('sis', { type: 'geojson', data: geo });
+    if (!m.getLayer('sis-c')) m.addLayer({ id: 'sis-c', type: 'circle', source: 'sis', paint: {
+      'circle-color': COLOR, 'circle-radius': RADIO,
+      'circle-stroke-width': 1.2, 'circle-stroke-color': root.dataset.theme === 'dark' ? '#111214' : '#ffffff', 'circle-opacity': .92 } });
+    if (!m.getLayer('sis-hl')) m.addLayer({ id: 'sis-hl', type: 'circle', source: 'sis', filter: ['==', ['get', 'id'], '__'], paint: {
+      'circle-color': 'rgba(0,0,0,0)', 'circle-radius': ['+', RADIO, 5],
+      'circle-stroke-width': 2.5, 'circle-stroke-color': '#2D8EFF' } });
+    if (!m.getLayer('sis-t')) m.addLayer({ id: 'sis-t', type: 'symbol', source: 'sis', minzoom: 5.2, layout: {
+      'text-field': ['get', 'ciudad'], 'text-font': ['Montserrat Medium', 'Montserrat Regular'], 'text-size': 11,
+      'text-offset': [0, 1.2], 'text-anchor': 'top', 'text-optional': true },
+      paint: { 'text-color': root.dataset.theme === 'dark' ? '#E8EAED' : '#1A1C20', 'text-halo-color': root.dataset.theme === 'dark' ? '#111214' : '#ffffff', 'text-halo-width': 1.2 } });
+  }
+  function resaltar(id) { mapas.forEach(function (m) { if (m.getLayer('sis-hl')) m.setFilter('sis-hl', ['==', ['get', 'id'], id || '__']); }); }
+  function initMapa(data) {
+    if (!window.maplibregl) { $('.mapcard').hidden = true; return; }
+    geo = { type: 'FeatureCollection', features: data.filter(function (r) { return r.centro; }).map(function (r) {
+      return { type: 'Feature', geometry: { type: 'Point', coordinates: r.centro }, properties: { id: r.id, ciudad: r.ciudad, sistema: r.sistema, poblacion: r.poblacion, pct_v: r.pct_v, pct_r: r.pct_r, estaciones: r.estaciones } };
+    }).sort(function (a, b) { return b.properties.poblacion - a.properties.poblacion; }) };   // grandes debajo
+    var opts = { style: ESTILOS[root.dataset.theme], attributionControl: false, dragRotate: false, pitchWithRotate: false };
+    var m = new maplibregl.Map(Object.assign({ container: 'mapa', bounds: [-9.6, 35.9, 4.6, 44.0], fitBoundsOptions: { padding: $('#mapa').clientWidth > 700 ? { top: 20, bottom: 20, left: 20, right: 210 } : { top: 64, bottom: 10, left: 6, right: 6 } }, minZoom: 3.5, maxZoom: 11 }, opts));
+    m.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
+    m.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-right');
+    var c = new maplibregl.Map(Object.assign({ container: 'mapa-can', bounds: [-18.3, 27.5, -13.3, 29.5], interactive: false }, opts));
+    mapas = [m, c];
+    mapas.forEach(function (mm) {
+      mm.on('style.load', function () { capas(mm); });
+      mm.on('mousemove', 'sis-c', function (e) {
+        var p = e.features[0].properties; mm.getCanvas().style.cursor = 'pointer'; resaltar(p.id);
+        if (popup) popup.remove();
+        popup = new maplibregl.Popup({ closeButton: false, offset: 10 }).setLngLat(e.features[0].geometry.coordinates)
+          .setHTML('<div class="pp"><b>' + esc(p.ciudad) + '</b> <span class="m">· ' + esc(p.sistema) + '</span><br>' + nf(p.pct_v, 1) + ' % a &lt; 250 m · ' + nf(p.pct_r, 1) + ' % a &gt; 500 m<br><span class="m">' + nf(p.poblacion) + ' hab. · ' + nf(p.estaciones) + ' estaciones</span></div>').addTo(mm);
+      });
+      mm.on('mouseleave', 'sis-c', function () { mm.getCanvas().style.cursor = ''; resaltar(null); if (popup) { popup.remove(); popup = null; } });
+      mm.on('click', 'sis-c', function (e) { location.href = e.features[0].properties.id + '/'; });
+    });
+    // la tabla resalta el punto
+    $('#tb').addEventListener('mouseover', function (e) { var tr = e.target.closest('tr[data-id]'); resaltar(tr ? tr.dataset.id : null); });
+    $('#tb').addEventListener('mouseleave', function () { resaltar(null); });
+  }
   var COLS = [
     { k: 'ciudad', t: 'Ciudad · sistema', l: true }, { k: 'poblacion', t: 'Población' }, { k: 'estaciones', t: 'Estaciones' },
     { k: 'hab_por_estacion', t: 'Hab./estación' }, { k: 'est_10k', t: 'Est./10.000 hab.' },
@@ -112,7 +180,7 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
     document.querySelectorAll('#hd th').forEach(function (th) { th.classList.toggle('on', th.dataset.k === S.k); th.classList.toggle('asc', S.d > 0); });
     $('#tb').innerHTML = rows.map(function (r) {
       var seg = function (c, p) { return '<span class="' + c + '" style="width:' + p + '%">' + (p >= 9 ? Math.round(p) + ' %' : '') + '</span>'; };
-      return '<tr><td><a class="nm" href="' + r.id + '/">' + esc(r.ciudad) + '</a>' + (r.catastro === 'foral' ? '<span class="tag">foral</span>' : '') + '<span class="ct">' + esc(r.sistema) + '</span></td>' +
+      return '<tr data-id="' + r.id + '"><td><a class="nm" href="' + r.id + '/">' + esc(r.ciudad) + '</a>' + (r.catastro === 'foral' ? '<span class="tag">foral</span>' : '') + '<span class="ct">' + esc(r.sistema) + '</span></td>' +
         '<td>' + nf(r.poblacion) + '</td><td>' + nf(r.estaciones) + '</td><td>' + nf(r.hab_por_estacion) + '</td><td>' + nf(r.est_10k, 1) + '</td>' +
         '<td class="l"><div class="bar" title="' + nf(r.pct_v, 1) + ' % · ' + nf(r.pct_a, 1) + ' % · ' + nf(r.pct_r, 1) + ' %">' + seg('v', r.pct_v) + seg('a', r.pct_a) + seg('r', r.pct_r) + '</div></td>' +
         '<td><b>' + nf(r.pct_v, 1) + ' %</b></td><td>' + nf(r.pct_r, 1) + ' %</td><td>' + (r.nuevas_80 == null ? '—' : r.nuevas_80 === 0 ? 'ya' : nf(r.nuevas_80)) + '</td></tr>';
@@ -131,7 +199,7 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
       ['Mayor cobertura', best ? esc(best.ciudad) : '—', best ? nf(best.pct_v, 1) + ' % a < 250 m' : '']
     ].map(function (k) { return '<div class="kpi"><div class="l">' + k[0] + '</div><div class="kv">' + k[1] + '</div><div class="s">' + k[2] + '</div></div>'; }).join('');
     $('#ft').textContent = 'Datos generados el ' + new Date(j.generado).toLocaleDateString('es-ES') + '. Población: INE, Censo anual de población a 1 de enero de 2025.';
-    render();
+    render(); initMapa(data);
   }).catch(function () { $('#tb').innerHTML = '<tr><td colspan="9">No se pudieron cargar los datos.</td></tr>'; });
 })();
 </script>

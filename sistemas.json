@@ -500,6 +500,226 @@
    },
    "epsg": 25830,
    "kmax": 100
+  },
+  {
+   "id": "boadilla",
+   "sistema": "bibo",
+   "ciudad": "Boadilla del Monte",
+   "ine": "28022",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "28022-BOADILLA DEL MONTE"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bibo"
+   },
+   "osm": "europe/spain/comunidad_de_madrid",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 100
+  },
+  {
+   "id": "castro",
+   "sistema": "BiciCastro",
+   "ciudad": "Castro-Urdiales",
+   "ine": "39020",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "39020-CASTRO URDIALES"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicicastro"
+   },
+   "osm": "europe/spain/cantabria",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 50
+  },
+  {
+   "id": "mislata",
+   "sistema": "BiciMislata",
+   "ciudad": "Mislata",
+   "ine": "46169",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "46171-MISLATA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicimislata"
+   },
+   "osm": "europe/spain/comunitat_valenciana/valencia",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 50
+  },
+  {
+   "id": "torrent",
+   "sistema": "TorrentBici",
+   "ciudad": "Torrent",
+   "ine": "46244",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "46246-TORRENT"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "torrentbici"
+   },
+   "osm": "europe/spain/comunitat_valenciana/valencia",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 100
+  },
+  {
+   "id": "aviles",
+   "sistema": "Avilés en Bici",
+   "ciudad": "Avilés",
+   "ine": "33004",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "33004-AVILES"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "aviles-en-bici"
+   },
+   "osm": "europe/spain/asturias",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 100
+  },
+  {
+   "id": "vilagarcia",
+   "sistema": "VaiBike",
+   "ciudad": "Vilagarcía de Arousa",
+   "ine": "36060",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "36060-VILAGARCIA DE AROUSA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "vaibike"
+   },
+   "osm": "europe/spain/galicia/pontevedra",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25829,
+   "kmax": 50
+  },
+  {
+   "id": "arteixo",
+   "sistema": "biciArteixo",
+   "ciudad": "Arteixo",
+   "ine": "15005",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "15005-ARTEIXO"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "biciarteixo"
+   },
+   "osm": "europe/spain/galicia/la_coruna",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25829,
+   "kmax": 50
+  },
+  {
+   "id": "santvicent",
+   "sistema": "Bicisanvi",
+   "ciudad": "Sant Vicent del Raspeig",
+   "ine": "03122",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "03122-SAN VICENTE DEL RASPEIG SANT V"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bicisanvi"
+   },
+   "osm": "europe/spain/comunitat_valenciana/alicante",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 50
+  },
+  {
+   "id": "villarcayo",
+   "sistema": "Vive Villarcayo",
+   "ciudad": "Villarcayo",
+   "ine": "09903",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "09473-VILLARCAYO DE MERINDAD DE CAST"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "vive-villarcayo"
+   },
+   "osm": "europe/spain/castilla_y_leon/burgos",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 30
+  },
+  {
+   "id": "illaarousa",
+   "sistema": "BiciArousa",
+   "ciudad": "A Illa de Arousa",
+   "ine": "36901",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "36062-A ILLA DE AROUSA"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "biciarousa"
+   },
+   "osm": "europe/spain/galicia/pontevedra",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25829,
+   "kmax": 30
+  },
+  {
+   "id": "aller",
+   "sistema": "BeALLER",
+   "ciudad": "Aller",
+   "ine": "33002",
+   "catastro": {
+    "tipo": "nacional",
+    "codigo": "33002-ALLER"
+   },
+   "estaciones": {
+    "tipo": "citybikes",
+    "id": "bealler"
+   },
+   "osm": "europe/spain/asturias",
+   "limites": {
+    "tipo": "ine"
+   },
+   "epsg": 25830,
+   "kmax": 30
   }
  ]
 }
