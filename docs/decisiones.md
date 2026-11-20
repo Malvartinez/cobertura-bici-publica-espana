@@ -26,7 +26,7 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 - Edificios: Catastro INSPIRE Buildings de la DG del Catastro. País Vasco: catastros forales (Bizkaia por municipio, Araba y Gipuzkoa por provincia, recortando el municipio por punto interior). En los forales se considera residencial todo edificio con viviendas, porque no publican el uso de forma homogénea; los tres publican `numberOfDwellings`.
 - Red peatonal: extractos de `download.openstreetmap.fr` (autonómicos o provinciales), recortados con `osmium extract` al municipio + 1 km y filtrados con el mismo criterio que OSMnx usa para `network_type="walk"` — Overpass y Geofabrik cortan la conexión desde el entorno de cálculo.
 - Vías cortadas por el borde del extracto (frontera con Portugal en Badajoz): se parten en tramos de nodos presentes, nunca se unen huecos.
-- Zonas: barrios oficiales cuando se han podido descargar (Madrid, Barcelona, Zaragoza, València y Sevilla); en el resto, distritos censales del INE con el nombre «Distrito N» y sin nivel de barrio. En Bilbao, Donostia, Vitoria y Palma no se encontró una descarga accesible.
+- Zonas: barrios oficiales cuando se han podido descargar (Madrid, Barcelona, Zaragoza, València, Sevilla, Valladolid y Las Palmas de Gran Canaria); en el resto, distritos censales del INE con el nombre «Distrito N» y sin nivel de barrio.
 - València: distritos (19) y barrios (87) del servidor ArcGIS del geoportal municipal (`OPENDATA/UrbanismoEInfraestructuras`, capas 225 y 224), localizados a través de datos.gob.es (su API exige una cabecera de navegador). El antiguo dominio de Opendatasoft ya no existe.
 - Sevilla: barrios (110) de la IDE Sevilla (Gerencia de Urbanismo, CC BY 4.0, junio de 2024), publicados en ArcGIS (`Barrios_de_Sevilla`). Los distritos (11) se construyen uniendo sus barrios, con el código y el nombre oficiales que trae cada barrio; la capa de distritos del mismo organismo usa otros identificadores.
 - Nombres en mayúsculas en origen (Zaragoza, València, Sevilla): se capitalizan, con artículos y preposiciones en minúscula salvo al inicio o tras guion, y la ele geminada valenciana (l·l). Se respetan las tildes que falten en origen.
@@ -69,3 +69,12 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 ## Página matriz: mapa de sistemas
 
 - Mapa con un punto por sistema, en el centro de su término: color según % de población a menos de 250 m (misma escala que las coropletas de cada ciudad) y radio proporcional a la raíz de la población (área proporcional a la población). Canarias va en un recuadro aparte para no reducir la península. Al pasar el ratón muestra los datos, al hacer clic abre el sistema y al pasar por una fila de la tabla se resalta su punto.
+
+## Barrios oficiales en más ciudades (2026-11-20)
+
+- Búsqueda sistemática en datos.gob.es (por el código INE del ayuntamiento publicador) y en ArcGIS Hub (filtrando por cuenta u organización municipal) para las 29 ciudades sin barrios.
+- Valladolid: barrios = las 47 zonas estadísticas municipales, construidas uniendo las secciones censales de 2021 (KMZ del Ayuntamiento) según su tabla de composición sección → zona; distritos, los 12 censales (no hay capa municipal con nombres).
+- Las Palmas de Gran Canaria: 122 barrios del Gemelo Digital del Ayuntamiento (ArcGIS, fuente declarada: Ayuntamiento); los distritos (5) se construyen uniendo barrios, con los nombres oficiales puestos en `sistemas.json` porque la capa solo trae el número. El código de núcleo de la capa agrupa varios barrios (p. ej. todos los diseminados), así que la clave del barrio es su nombre.
+- Encontrados pero inaccesibles desde el entorno de cálculo: Donostia (barrios y distritos en GeoJSON), Vitoria-Gasteiz (barrios 2019) y Bilbao (barrios estadísticos) — sus servidores rechazan la conexión — y A Coruña (bloquea la red del entorno). Con acceso desde otra red basta con añadir su capa en `sistemas.json` (tipo `capas`).
+- Descartados: Palma (la única capa localizada es de una cuenta universitaria, no del Ajuntament), Santander (su capa de distritos solo trae códigos, equivalentes a los censales) y Gijón (polígonos sin nombre ni código de un plan de movilidad). En el resto no se encontró ninguna capa publicada.
+- Capitalización: se pasan a mayúscula los números romanos (Casablanca III).

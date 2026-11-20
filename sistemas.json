@@ -197,7 +197,13 @@
    },
    "osm": "europe/spain/castilla_y_leon/valladolid",
    "limites": {
-    "tipo": "ine"
+    "tipo": "secciones_zonas",
+    "fuente": "Ayuntamiento de Valladolid: zonas estadísticas (composición por secciones censales 2021)",
+    "url_fuente": "https://www.valladolid.es/es/temas/hacemos/open-data-datos-abiertos/catalogo-datos",
+    "secciones_kmz": "https://www.valladolid.es/es/temas/hacemos/open-data-datos-abiertos/catalogo-datos/ficheros-datos-elaborados-clasificados-sectores/urbanismo-infraestructuras.ficheros/682335-SECCIONES_censales_LayerToKM1.kmz",
+    "tabla_zonas": "https://www.valladolid.es/es/temas/hacemos/open-data-datos-abiertos/catalogo-datos/ficheros-datos-elaborados-clasificados-sectores/urbanismo-infraestructuras.ficheros/682333-Distritos-Secciones-2021.csv",
+    "campo_cod": "ZONA_ESTAD_NUMERICA",
+    "campo_nombre": "NOMBRE ZONA"
    },
    "epsg": 25830,
    "kmax": 400
@@ -276,7 +282,23 @@
    },
    "osm": "africa/spain/canarias",
    "limites": {
-    "tipo": "ine"
+    "tipo": "capas",
+    "fuente": "Ayuntamiento de Las Palmas de Gran Canaria (Gemelo Digital): barrios; distritos como unión de sus barrios",
+    "url_fuente": "https://services-eu1.arcgis.com/eV9RayDSwR2BokOl/arcgis/rest/services/Barrios/FeatureServer/0",
+    "barrios": {
+     "url": "https://services-eu1.arcgis.com/eV9RayDSwR2BokOl/arcgis/rest/services/Barrios/FeatureServer/0/query?where=1%3D1&outFields=NUCL_CO_ID,NUCL_DS_NO,DIST_CO_ID&f=geojson&outSR=4326",
+     "cod": "NUCL_DS_NO",
+     "nombre": "NUCL_DS_NO",
+     "distrito": "DIST_CO_ID",
+     "capitalizar": true,
+     "distrito_nombres": {
+      "1": "Vegueta, Cono Sur y Tafira",
+      "2": "Centro",
+      "3": "Isleta-Puerto-Guanarteme",
+      "4": "Ciudad Alta",
+      "5": "Tamaraceite-San Lorenzo-Tenoya"
+     }
+    }
    },
    "epsg": 25828,
    "kmax": 400

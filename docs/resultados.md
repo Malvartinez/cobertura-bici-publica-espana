@@ -1,6 +1,6 @@
 # Resultados
 
-Datos generados el 2026-11-19. Población: INE, Censo anual de población a 1 de enero de 2025.
+Datos generados el 2026-11-20. Población: INE, Censo anual de población a 1 de enero de 2025.
 Distancia andando por la red peatonal a la estación más cercana. Ordenado por % de población a menos de 250 m.
 
 | Ciudad | Sistema | Población | Estaciones | Hab./estación | < 250 m | 250–500 m | > 500 m | Nuevas para 80 % |

@@ -59,6 +59,7 @@ elif T == "capas":
             n = n.str.title().str.replace(MIN, lambda m: m.group(1).lower(), regex=True)
             n = n.str.replace(r"([Ll])\.[Ll]", lambda m: m.group(1) + "·l", regex=True)  # ela geminada: MARCEL.LI -> Marcel·li
             n = n.str.replace(r"(?<=\s)([LD])'", lambda m: m.group(1).lower() + "'", regex=True)  # "de L'Oest" -> "de l'Oest"
+            n = n.str.replace(r"(?i)\b(ii|iii|iv|vi|vii|viii|ix)\b", lambda m: m.group(1).upper(), regex=True)  # numeros romanos
         return n.values
     if "distritos" in L:
         c = L["distritos"]; d = capa(c, "distritos")
@@ -68,9 +69,37 @@ elif T == "capas":
         codb = cod(b[c["cod"]], c.get("ancho", 3))
         bar = gpd.GeoDataFrame({"cod_barrio": codb, "nombre": nombres(b[c["nombre"]], c.get("capitalizar")),
                                 "cod_distrito": cod(b[c["distrito"]]) if c.get("distrito") else None}, geometry=b.geometry.values, crs=CRS)
-        if dis is None and c.get("distrito_nombre"):  # distritos = union de sus barrios (codigo y nombre oficiales en la capa de barrios)
-            dis = gpd.GeoDataFrame({"cod_distrito": cod(b[c["distrito"]]), "nombre": nombres(b[c["distrito_nombre"]], False)},
-                                   geometry=b.geometry.values, crs=CRS)
+        if dis is None and (c.get("distrito_nombre") or c.get("distrito_nombres")):  # distritos = union de sus barrios
+            cd = cod(b[c["distrito"]])
+            nd = nombres(b[c["distrito_nombre"]], False) if c.get("distrito_nombre") else [c["distrito_nombres"].get(str(int(x)), "Distrito " + str(int(x))) for x in cd]
+            dis = gpd.GeoDataFrame({"cod_distrito": cd, "nombre": nd}, geometry=b.geometry.values, crs=CRS)
+    fuente, url_fuente = L["fuente"], L["url_fuente"]
+
+elif T == "secciones_zonas":
+    # barrios = union de secciones censales segun una tabla municipal seccion -> zona (Valladolid: zonas estadisticas).
+    # Las secciones (KMZ con DISTRITO y SECCION en la descripcion) son las del año de la tabla.
+    import re
+    kmz = RL / "secciones.kmz"
+    if not kmz.exists(): kmz.write_bytes(get(L["secciones_kmz"]).content)
+    zipfile.ZipFile(kmz).extractall(RL / "secciones_kmz")
+    sk = gpd.read_file(next((RL / "secciones_kmz").glob("*.kml")))
+    at = sk.description.map(lambda h: dict(zip(*[iter(re.findall(r"<td>([^<]*)</td>", h)[1:])] * 2)))
+    sk["clave"] = [f"{int(a['DISTRITO'])}-{int(a['SECCION'])}" for a in at]
+    tf = RL / "zonas.csv"
+    if not tf.exists(): tf.write_bytes(get(L["tabla_zonas"]).content)
+    raw = tf.read_bytes()
+    try: txt = raw.decode("utf-8")
+    except UnicodeDecodeError: txt = raw.decode("latin-1")
+    tz = pd.read_csv(io.StringIO(txt), sep=";", dtype=str)
+    tz.columns = [c.strip().upper() for c in tz.columns]
+    tz["clave"] = tz.DISTRITO.astype(int).astype(str) + "-" + tz.SECCION.astype(int).astype(str)
+    j = sk.merge(tz[["clave", L["campo_cod"], L["campo_nombre"]]], on="clave", how="left")
+    print("secciones sin zona en la tabla:", int(j[L["campo_cod"]].isna().sum()), "de", len(j))
+    j = j.dropna(subset=[L["campo_cod"]]).to_crs(CRS)
+    j["geometry"] = j.geometry.buffer(0)
+    zz = j.dissolve(L["campo_cod"], aggfunc="first").reset_index()
+    bar = gpd.GeoDataFrame({"cod_barrio": cod(zz[L["campo_cod"]], 3), "nombre": zz[L["campo_nombre"]].str.strip().values, "cod_distrito": None},
+                           geometry=zz.geometry.values, crs=CRS)
     fuente, url_fuente = L["fuente"], L["url_fuente"]
 
 if dis is None:  # distritos censales del INE
