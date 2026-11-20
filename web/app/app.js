@@ -74,7 +74,13 @@
     $('#ob-next').textContent = step === s.length - 1 ? 'Empezar' : 'Siguiente';
   }
   function openOb() { step = 0; renderOb(); $('#modal').hidden = false; }
-  function closeOb() { $('#modal').hidden = true; store.set('cobertura_visto_' + (meta.id || ''), '1'); }
+  function closeOb() { $('#modal').hidden = true; store.set('cobertura_visto', '1'); }
+  // la presentacion sale solo la primera vez que se entra en cualquier ciudad (vale tambien la marca antigua por ciudad)
+  function presentacionVista() {
+    if (store.get('cobertura_visto')) return true;
+    try { for (var i = 0; i < localStorage.length; i++) if (/^cobertura_visto_/.test(localStorage.key(i))) return true; } catch (e) {}
+    return false;
+  }
   $('#ob-next').onclick = function () { if (step >= steps().length - 1) closeOb(); else { step++; renderOb(); } };
   $('#ob-skip').onclick = function (e) { e.preventDefault(); closeOb(); };
   $('#modal').addEventListener('click', function (e) { if (e.target === this) closeOb(); });
@@ -615,6 +621,6 @@
     }
     renderLegend(); renderAll(); init();
     $('#sim').hidden = !(AMP.curve && AMP.pts);
-    if (!store.get('cobertura_visto_' + (meta.id || ''))) openOb();
+    if (!presentacionVista()) { store.set('cobertura_visto', '1'); openOb(); }
   });
 })();
