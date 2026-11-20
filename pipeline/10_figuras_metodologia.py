@@ -12,7 +12,7 @@ from scipy.sparse.csgraph import dijkstra
 from scipy.spatial import cKDTree
 from shapely import STRtree
 from comun import P, SIS, CFG
-from _acceso import accesos, RADIO
+from _acceso import accesos
 
 EDIF = sys.argv[1] if len(sys.argv) > 1 else "6674803XM7167D"
 OUT = "web/metodologia/"; os.makedirs(OUT, exist_ok=True)
@@ -31,22 +31,29 @@ sec = gpd.read_file(P + "secciones.gpkg"); pob = pd.read_parquet(P + "poblacion_
 N = len(nod); idx = pd.Series(np.arange(N), index=nod.node_id.values); nx_, ny_ = nod.x.values, nod.y.values
 U = idx[ed.u.values].values; V = idx[ed.v.values].values; L = np.maximum(ed.length.values.astype(float), 1e-6)
 sd, sn = cKDTree(np.c_[nx_, ny_]).query(np.c_[bas.geometry.x, bas.geometry.y])
-ob, on, oo, ini, dp = accesos(P, bld, ed, U, V, L, nx_, ny_)
 i = int(np.flatnonzero(bld.edif_id.values == EDIF)[0]); b = bld.iloc[i]
 huella = fp.loc[EDIF].geometry; pint = b.geometry
-k0, k1 = ini[i], (ini[i + 1] if i + 1 < len(ini) else len(ob))
-opc_n, opc_o = on[k0:k1], oo[k0:k1]; es_borde = np.arange(k1 - k0) >= 2
+def opciones(portales):
+    ob, on, oo, ini, dp = accesos(P, bld, ed, U, V, L, nx_, ny_, portales=portales)
+    k0, k1 = ini[i], (ini[i + 1] if i + 1 < len(ini) else len(ob))
+    return on[k0:k1], oo[k0:k1], dp
+opc_n, opc_o, dp = opciones(True)        # metodo vigente: portales del Catastro
+bor_n, bor_o, _ = opciones(False)        # comparacion: cualquier punto de la red a <= 30 m de la fachada
+por = pd.read_parquet(P + "portales.parquet"); por = por[por.refcat == EDIF[:14]].reset_index(drop=True)
+assert len(por) and len(opc_n) == 2 * len(por), "el edificio del ejemplo debe tener portales"
 j = int(np.flatnonzero(bas.base_id.astype(str).values == str(b.base_id))[0]); est = bas.iloc[j]
 G = sp.coo_matrix((L, (U, V)), shape=(N, N)).tocsr()
 Dj, pred = dijkstra(G, directed=False, indices=sn[j], return_predecessors=True, limit=3000)
-tot = sd[j] + Dj[opc_n] + opc_o
-kb = int(np.argmin(tot)); kint = int(np.argmin(tot[:2]))
+tot = sd[j] + Dj[opc_n] + opc_o; kb = int(np.argmin(tot)); pb_ = kb % len(por)   # opcion k -> portal k mod n
+tob = sd[j] + Dj[bor_n] + bor_o; kbo = int(np.argmin(tob))
 def camino(n):
     c = [n]
     while c[-1] != sn[j] and pred[c[-1]] >= 0: c.append(pred[c[-1]])
     return np.array(c)
-cam_b, cam_i = camino(opc_n[kb]), camino(opc_n[kint])
-d_fin, d_int = float(tot[kb]), float(tot[kint]); recta = float(huella.distance(est.geometry)); recta_pi = float(pint.distance(est.geometry))
+cam_b, cam_o = camino(opc_n[kb]), camino(bor_n[kbo])
+d_fin, d_bor = float(tot[kb]), float(tob[kbo]); recta = float(huella.distance(est.geometry))
+ppx, ppy = float(por.x[pb_]), float(por.y[pb_])
+la = ed.geometry.values[int(por.arista[pb_])]; pr_ = la.interpolate(la.project(shapely.Point(ppx, ppy)))
 nivel = lambda d: ("verde", VERDE) if d < 250 else (("amarillo", AMAR) if d <= 500 else ("rojo", ROJO))
 # reparto de población en la sección
 cs = b.cusec; secg = sec.set_index("cusec").loc[cs].geometry
@@ -54,9 +61,10 @@ res_sec = bld[bld.cusec == cs]; viv_sec = int(res_sec.n_viviendas.sum()); pob_se
 caso = dict(sistema=CFG["sistema"], ciudad=CFG["ciudad"], edificio=EDIF, viviendas=int(b.n_viviendas), poblacion=round(float(b.poblacion), 1),
             seccion=cs, viviendas_seccion=viv_sec, poblacion_seccion=pob_sec, edificios_seccion=int(len(res_sec)), area_m2=round(huella.area),
             estacion=str(est.nombre), enganche_estacion_m=round(float(sd[j]), 1), d_perp_m=round(float(dp[i]), 1),
-            opciones=int(k1 - k0), opciones_borde=int(es_borde.sum()), recta_m=round(recta), recta_punto_interior_m=round(recta_pi),
-            red_punto_interior_m=round(d_int), red_mejor_acceso_m=round(d_fin), desfase_mejor_m=round(float(opc_o[kb]), 1),
-            nivel_punto_interior=nivel(d_int)[0], nivel=nivel(d_fin)[0], distancia_web=round(float(b.distancia)))
+            portales=len(por), portal_mejor=f"{por.via[pb_]} {por.numero[pb_]}", portal_arista_m=round(float(por.d_arista[pb_]), 1),
+            portales_misma_arista=int(por.arista.nunique()), recta_m=round(recta),
+            red_borde_m=round(d_bor), red_mejor_acceso_m=round(d_fin), desfase_mejor_m=round(float(opc_o[kb]), 1),
+            nivel_borde=nivel(d_bor)[0], nivel=nivel(d_fin)[0], distancia_web=round(float(b.distancia)))
 json.dump(caso, open(OUT + "caso.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print(caso)
 
@@ -128,31 +136,26 @@ ax.legend(handles=[Line2D([], [], color=TX, lw=1.6, ls="--", label="Límite de l
                    Patch(facecolor="none", edgecolor=TX, lw=2, label="Edificio del ejemplo")], loc="lower right", framealpha=.95, edgecolor="#D5D9DE", fontsize=9.5)
 escala(ax, 100); pie(f); guardar(f, "paso1_poblacion.png")
 
-# 3. puntos de acceso
-hb = huella.bounds; ar = max(hb[2] - hb[0], hb[3] - hb[1]) * .5 + RADIO + 25
-f, ax = lienzo(hx, hy, ar, "Paso 2 · Por dónde se entra a la red peatonal",
-               f"Vale cualquier punto de la red a {RADIO:.0f} m o menos de la fachada (y, de respaldo, la calle más cercana al punto interior)")
+# 3. portales
+hb = huella.bounds; ar = max(hb[2] - hb[0], hb[3] - hb[1]) * .5 + 45
+f, ax = lienzo(hx, hy, ar, "Paso 2 · Por dónde se sale del edificio: sus portales",
+               "El Catastro sitúa cada portal en la fachada; cada uno se engancha al tramo de calle más cercano")
 fondo(ax, bbox=(hx - 2 * ar, hy - ar, hx + 2 * ar, hy + ar))
-gpd.GeoSeries([huella.buffer(RADIO)]).plot(ax=ax, facecolor="#2fa35a14", edgecolor=VERDE, linewidth=1, linestyle="--", zorder=3)
 gpd.GeoSeries([huella]).plot(ax=ax, color="#BFE3C8", edgecolor=TX, linewidth=1.2, zorder=5)
-# enganche del punto interior: arista mas cercana y proyeccion
-eg = STRtree(ed.geometry.values).nearest(pint); ln = ed.geometry.values[eg]; proy = ln.interpolate(ln.project(pint))
-gpd.GeoSeries([ln]).plot(ax=ax, color=TX2, linewidth=2.6, zorder=6)
-ax.plot([pint.x, proy.x], [pint.y, proy.y], color=TX2, lw=1.2, ls=":", zorder=7)
-ax.scatter([pint.x], [pint.y], s=55, marker="X", color=TX, zorder=12)
-xs, ys = pts(opc_n[:2]); ax.scatter(xs, ys, s=46, color="white", edgecolor=TX, linewidth=1.4, zorder=11)
-xb, yb = pts(opc_n[es_borde]); ax.scatter(xb, yb, s=46, color=VERDE, edgecolor="white", linewidth=1, zorder=11)
-ax.scatter([nx_[opc_n[kb]]], [ny_[opc_n[kb]]], s=190, facecolor="none", edgecolor=TX, linewidth=1.6, zorder=12)
-rotulo(ax, nx_[opc_n[kb]], ny_[opc_n[kb]], f"El que acabará siendo el mejor: a {opc_o[kb]:.0f} m de la fachada", dx=-ar * .05, dy=ar * .5, ha="center")
-rotulo(ax, pint.x, pint.y, f"Punto interior: a {caso['d_perp_m']:.0f} m de la calle más cercana", dx=hx - pint.x, dy=huella.bounds[1] - pint.y - ar * .1, ha="center")
-ax.text(.015, .97, f"{caso['opciones_borde']} puntos de la red a 30 m o menos de la fachada\n(a cada uno se le suma su distancia hasta el borde)\n+ 2 de respaldo: los extremos de la calle más cercana\nal punto interior", transform=ax.transAxes, va="top", fontsize=9.8, zorder=30,
+egs = ed.geometry.values; ppts = shapely.points(por.x.values, por.y.values)
+gpd.GeoSeries(egs[np.unique(por.arista.values.astype(int))]).plot(ax=ax, color=TX2, linewidth=2.6, zorder=6)
+for k in range(len(por)):
+    l_ = egs[int(por.arista[k])]; q_ = l_.interpolate(l_.project(ppts[k]))
+    ax.plot([por.x[k], q_.x], [por.y[k], q_.y], color=TX2, lw=1, ls=":", zorder=7)
+ax.scatter(por.x, por.y, s=46, color=VERDE, edgecolor="white", linewidth=1, zorder=11)
+ax.scatter([ppx], [ppy], s=190, facecolor="none", edgecolor=TX, linewidth=1.6, zorder=12)
+rotulo(ax, ppx, ppy, f"El que acabará siendo el mejor: {caso['portal_mejor'].title()}", dx=0, dy=ar * .45, ha="center")
+ax.text(.015, .97, f"{caso['portales']} portales en el Catastro (direcciones)\nCada uno se une al tramo de calle más cercano\n(a la distancia del portal a la calle se le suma\nel tramo hasta cada extremo)", transform=ax.transAxes, va="top", fontsize=9.8, zorder=30,
         bbox=dict(boxstyle="round,pad=.5", fc="white", ec="#D5D9DE", lw=.8))
 ax.legend(handles=[Patch(facecolor="#BFE3C8", edgecolor=TX, label="Huella del edificio"),
-                   Patch(facecolor="#2fa35a14", edgecolor=VERDE, ls="--", label=f"Franja de {RADIO:.0f} m alrededor de la fachada"),
-                   Line2D([], [], marker="o", ls="", markerfacecolor=VERDE, markeredgecolor="white", markersize=8, label="Acceso por la fachada (+ metros hasta el borde)"),
-                   Line2D([], [], marker="X", ls="", color=TX, markersize=8, label="Punto interior del edificio"),
-                   Line2D([], [], color=TX2, lw=2.6, label="Calle más cercana al punto interior"),
-                   Line2D([], [], marker="o", ls="", markerfacecolor="white", markeredgecolor=TX, markersize=8, label="Extremos de esa calle (accesos de respaldo)")],
+                   Line2D([], [], marker="o", ls="", markerfacecolor=VERDE, markeredgecolor="white", markersize=8, label="Portal (Catastro, direcciones)"),
+                   Line2D([], [], color=TX2, lw=1, ls=":", label="Del portal a la calle"),
+                   Line2D([], [], color=TX2, lw=2.6, label="Tramos de calle por los que se sale")],
           loc="lower right", framealpha=.95, edgecolor="#D5D9DE", fontsize=8.8)
 escala(ax, 25); pie(f); guardar(f, "paso2_accesos.png")
 
@@ -170,20 +173,23 @@ escala(ax, 10); pie(f); guardar(f, "paso3_estacion.png")
 
 # 5. camino mas corto
 f, ax = lienzo(mx, my, R0, "Paso 4 · El camino más corto por la red peatonal",
-               "Se calcula el recorrido mínimo desde la estación hasta cada acceso del edificio y se queda el mejor")
+               "Se calcula el recorrido mínimo desde la estación hasta cada portal del edificio y se queda el mejor")
 fondo(ax, bbox=bb)
 gpd.GeoSeries([huella]).plot(ax=ax, color="#BFE3C8", edgecolor=TX, linewidth=1, zorder=5)
-xi, yi = pts(cam_i); ax.plot(xi, yi, color=AMAR, lw=3.2, zorder=7, solid_capstyle="round")
-xm, ym = pts(cam_b); ax.plot(xm, ym, color=VERDE, lw=3.6, zorder=8, solid_capstyle="round")
-ax.plot([pint.x, nx_[opc_n[kint]]], [pint.y, ny_[opc_n[kint]]], color=AMAR, lw=1.4, ls=":", zorder=7)
-ax.scatter([nx_[opc_n[kb]]], [ny_[opc_n[kb]]], s=50, color=VERDE, edgecolor="white", zorder=11)
-ax.scatter([pint.x], [pint.y], s=50, marker="X", color=TX, zorder=12)
+xi, yi = pts(cam_o); ax.plot(xi, yi, color=AMAR, lw=3.2, zorder=7, solid_capstyle="round")
+from shapely.ops import substring
+_n = shapely.Point(nx_[opc_n[kb]], ny_[opc_n[kb]]); _t = la.project(pr_); _te = 0.0 if shapely.Point(la.coords[0]).distance(_n) < shapely.Point(la.coords[-1]).distance(_n) else la.length
+_seg = np.array(substring(la, min(_t, _te), max(_t, _te)).coords); _seg = _seg if _te >= _t else _seg[::-1]  # del portal proyectado al nodo
+xm, ym = pts(cam_b); xm = np.r_[ppx, _seg[:, 0], xm]; ym = np.r_[ppy, _seg[:, 1], ym]
+ax.plot(xm, ym, color=VERDE, lw=3.6, zorder=8, solid_capstyle="round")
+ax.scatter(por.x, por.y, s=22, color=VERDE, edgecolor="white", linewidth=.6, zorder=10)
+ax.scatter([ppx], [ppy], s=60, color=VERDE, edgecolor=TX, zorder=11)
 ax.scatter([ex], [ey], s=110, color=AZUL, edgecolor="white", linewidth=1.6, zorder=12)
-rotulo(ax, xm[len(xm) // 2], ym[len(ym) // 2], f"Mejor acceso: {caso['red_mejor_acceso_m']} m", dx=R0 * .12, dy=R0 * .12, color=TX, peso="bold")
-_solo = [k for k in range(len(cam_i)) if cam_i[k] not in set(cam_b)] or [0]; _k = _solo[len(_solo) // 2]
-rotulo(ax, xi[_k], yi[_k], f"Desde el punto interior: {caso['red_punto_interior_m']} m", dx=-R0 * .05, dy=-R0 * .22, ha="center")
-ax.legend(handles=[Line2D([], [], color=VERDE, lw=3.6, label="Recorrido hasta el mejor acceso por la fachada"),
-                   Line2D([], [], color=AMAR, lw=3.2, label="Recorrido si solo se usara el punto interior"),
+rotulo(ax, xm[len(xm) // 2], ym[len(ym) // 2], f"Mejor portal: {caso['red_mejor_acceso_m']} m", dx=R0 * .12, dy=R0 * .12, color=TX, peso="bold")
+_solo = [k for k in range(len(cam_o)) if cam_o[k] not in set(cam_b)] or [0]; _k = _solo[len(_solo) // 2]
+rotulo(ax, xi[_k], yi[_k], f"Desde cualquier punto a 30 m de la fachada: {caso['red_borde_m']} m", dx=-R0 * .05, dy=-R0 * .22, ha="center")
+ax.legend(handles=[Line2D([], [], color=VERDE, lw=3.6, label="Recorrido hasta el mejor portal (el que se usa)"),
+                   Line2D([], [], color=AMAR, lw=3.2, label="Si valiera cualquier punto a 30 m de la fachada"),
                    Line2D([], [], marker="o", ls="", color=AZUL, markersize=9, label="Estación")],
           loc="lower right", framealpha=.95, edgecolor="#D5D9DE", fontsize=9.5)
 escala(ax, 100); pie(f); guardar(f, "paso4_camino.png")
@@ -191,8 +197,8 @@ escala(ax, 100); pie(f); guardar(f, "paso4_camino.png")
 # 6. resultado
 f, ax = plt.subplots(figsize=(10, 4.6), dpi=150); ax.axis("off")
 ax.set_title("Paso 5 · La distancia del edificio y su nivel", pad=14)
-filas = [("En línea recta (no se usa)", caso["recta_m"], TX3), ("Por la red, desde el punto interior", caso["red_punto_interior_m"], AMAR),
-         ("Por la red, desde el mejor acceso (la que se usa)", caso["red_mejor_acceso_m"], VERDE)]
+filas = [("En línea recta (no se usa)", caso["recta_m"], TX3), ("Por la red, desde cualquier punto de la fachada", caso["red_borde_m"], AMAR),
+         ("Por la red, desde el mejor portal (la que se usa)", caso["red_mejor_acceso_m"], VERDE)]
 mxd = max(720, max(v for _, v, _ in filas) * 1.15)
 for k, (t, v, c) in enumerate(filas):
     y = 2 - k
@@ -204,5 +210,5 @@ ax.axvspan(0, 250, color=VERDE, alpha=.08, zorder=1); ax.axvspan(250, 500, color
 ax.text(125, -.75, "verde: menos de 250 m", ha="center", fontsize=9.5, color=TX2); ax.text(375, -.75, "amarillo: 250–500 m", ha="center", fontsize=9.5, color=TX2)
 ax.text((500 + mxd) / 2, -.75, "rojo: más de 500 m", ha="center", fontsize=9.5, color=TX2)
 ax.set_xlim(-330, mxd); ax.set_ylim(-1.05, 2.85)
-pie(f, f"Se suman: {caso['enganche_estacion_m']:.0f} m de la estación a la red + recorrido por la red + {caso['desfase_mejor_m']:.0f} m del punto de la red a la fachada")
+pie(f, f"Se suman: {caso['enganche_estacion_m']:.0f} m de la estación a la red + recorrido por la red + {caso['desfase_mejor_m']:.0f} m de la red al portal")
 guardar(f, "paso5_resultado.png")

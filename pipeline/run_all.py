@@ -6,7 +6,7 @@ TODOS = [s["id"] for s in json.load(open(os.path.join(R, "sistemas.json"), encod
 args = sys.argv[1:]
 desde = next((a.split("=",1)[1] for a in args if a.startswith("--desde=")), None)
 sis = TODOS if (not args or "--todos" in args) else [a for a in args if not a.startswith("-")]
-PASOS = ["01_estaciones", "01_ine", "01_limites", "01_catastro", "01_osm", "02_preparacion", "03_reparto_poblacion",
+PASOS = ["01_estaciones", "01_ine", "01_limites", "01_catastro", "01_osm", "01_direcciones", "02_preparacion", "03_reparto_poblacion",
          "04_distancias", "05_agregados", "06_exportar_web", "07_ranking_bases", "08_ampliacion"]
 fallos = []
 for s in sis:
