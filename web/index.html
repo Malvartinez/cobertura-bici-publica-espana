@@ -45,9 +45,8 @@ td .nm{font-weight:600}td .ct{display:block;font-size:12px;color:var(--tx2)}
 .bar span{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#111;overflow:hidden}
 .v{background:var(--gv)}.a{background:var(--ga)}.r{background:var(--gr)}
 .tag{display:inline-block;font-size:10px;padding:1px 5px;border-radius:4px;background:var(--s2);color:var(--tx2);margin-left:4px;vertical-align:1px}
-.notes{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
-.notes section{background:var(--panel);border:1px solid var(--b1);border-radius:var(--r);padding:14px 16px}
-.notes h2{font-size:15px;margin:0 0 6px}.notes p,.notes li{color:var(--tx2);font-size:13px}.notes ul{padding-left:18px;margin:6px 0}
+
+
 footer{color:var(--tx3);font-size:12px;margin-top:24px}
 .mapcard{position:relative;height:480px;margin:0 0 22px;overflow:hidden}
 #mapa{position:absolute;inset:0}
@@ -68,6 +67,7 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
 </head>
 <body>
 <header class="top"><div class="brand">Cobertura bici pública</div><div class="sp"></div>
+  <a href="metodologia.html" style="font-size:12px">Metodología</a>
   <a href="https://github.com/Malvartinez/cobertura-bici-publica-espana" style="font-size:12px">Código</a>
   <button class="ib" id="theme" title="Cambiar tema">☀</button></header>
 <main>
@@ -85,18 +85,6 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
   <div class="card">
     <div class="tools"><input id="q" type="search" placeholder="Buscar ciudad o sistema…"><span class="muted" id="cnt"></span><span class="sp"></span><span class="muted hint">Pulsa una cabecera para ordenar</span></div>
     <div class="tw"><table><thead><tr id="hd"></tr></thead><tbody id="tb"></tbody></table></div>
-  </div>
-  <div class="notes">
-    <section><h2>Método</h2><p>La población de cada sección censal (INE, Censo anual 2025) se reparte entre sus edificios residenciales según su número de viviendas (Catastro). La distancia de cada edificio a la estación más cercana se calcula sobre la red peatonal de OpenStreetMap desde su mejor punto de acceso (cualquier punto de la red a 30 m o menos de su fachada); si no hay ninguna a menos de 1,5 km, cuenta como «más de 500 m». El análisis abarca todo el término municipal.</p></section>
-    <section><h2>Cómo leer la comparación</h2><ul>
-      <li><b>Hab./estación</b> y <b>Est./10.000 hab.</b> miden el tamaño de la red respecto a la población.</li>
-      <li><b>Nuevas para 80 %</b>: estaciones que habría que añadir, elegidas una a una donde más mejoran la cobertura, para que el 80 % de la población viva a menos de 250 m. «—» si ya se supera o no se alcanza dentro del simulador.</li>
-      <li>Los términos municipales muy extensos con zonas rurales o de monte (Zaragoza, Badajoz, Albacete…) penalizan el porcentaje.</li></ul></section>
-    <section><h2>Fuentes y diferencias</h2><ul>
-      <li>Estaciones: feeds GBFS oficiales o, si el operador no publica uno, CityBikes.</li>
-      <li>Edificios: Catastro (DG del Catastro); en Bilbao, Donostia y Vitoria, catastros forales <span class="tag">foral</span>.</li>
-      <li>Zonas: barrios oficiales del ayuntamiento cuando se han podido obtener; si no, distritos censales del INE.</li>
-      <li>Red peatonal © colaboradores de OpenStreetMap (ODbL).</li></ul></section>
   </div>
   <footer id="ft"></footer>
 </main>
@@ -163,7 +151,8 @@ footer{color:var(--tx3);font-size:12px;margin-top:24px}
     { k: 'pct_v', t: 'Reparto de la población', l: true }, { k: 'pct_v2', t: '< 250 m', s: 'pct_v' }, { k: 'pct_r', t: '> 500 m' },
     { k: 'nuevas_80', t: 'Nuevas para 80 %' }];
   var S = { k: 'pct_v', d: -1, q: '' }, data = [];
-  $('#hd').innerHTML = COLS.map(function (c) { return '<th data-k="' + (c.s || c.k) + '" class="' + (c.l ? 'l' : '') + '">' + c.t + '</th>'; }).join('');
+  var AYUDA = { est_10k: 'Estaciones por cada 10.000 habitantes', hab_por_estacion: 'Habitantes por estación', nuevas_80: 'Estaciones nuevas que habría que añadir, elegidas una a una donde más mejoran la cobertura, para que el 80 % de la población viva a menos de 250 m. «ya»: se supera hoy; «—»: no se alcanza dentro del simulador' };
+  $('#hd').innerHTML = COLS.map(function (c) { return '<th data-k="' + (c.s || c.k) + '" class="' + (c.l ? 'l' : '') + '"' + (AYUDA[c.k] ? ' title="' + AYUDA[c.k] + '"' : '') + '>' + c.t + '</th>'; }).join('');
   $('#hd').onclick = function (e) {
     var th = e.target.closest('th'); if (!th) return; var k = th.dataset.k;
     if (S.k === k) S.d = -S.d; else { S.k = k; S.d = k === 'ciudad' || k === 'pct_r' || k === 'nuevas_80' || k === 'hab_por_estacion' ? 1 : -1; }

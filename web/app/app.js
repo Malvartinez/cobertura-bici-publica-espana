@@ -84,7 +84,7 @@
   $('#ob-next').onclick = function () { if (step >= steps().length - 1) closeOb(); else { step++; renderOb(); } };
   $('#ob-skip').onclick = function (e) { e.preventDefault(); closeOb(); };
   $('#modal').addEventListener('click', function (e) { if (e.target === this) closeOb(); });
-  $('#about').onclick = function (e) { e.preventDefault(); openOb(); };
+  if ($('#about') && $('#about').getAttribute('href') === '#') $('#about').onclick = function (e) { e.preventDefault(); openOb(); };  // si enlaza a la página de metodología, se navega
   $('#help').onclick = openOb;
   $('#legend').addEventListener('click', function (e) { if (e.target.closest('.lg-tg')) this.classList.toggle('open'); });
 

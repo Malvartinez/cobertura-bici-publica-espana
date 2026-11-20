@@ -78,3 +78,8 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 - Encontrados pero inaccesibles desde el entorno de cálculo: Donostia (barrios y distritos en GeoJSON), Vitoria-Gasteiz (barrios 2019) y Bilbao (barrios estadísticos) — sus servidores rechazan la conexión — y A Coruña (bloquea la red del entorno). Con acceso desde otra red basta con añadir su capa en `sistemas.json` (tipo `capas`).
 - Descartados: Palma (la única capa localizada es de una cuenta universitaria, no del Ajuntament), Santander (su capa de distritos solo trae códigos, equivalentes a los censales) y Gijón (polígonos sin nombre ni código de un plan de movilidad). En el resto no se encontró ninguna capa publicada.
 - Capitalización: se pasan a mayúscula los números romanos (Casablanca III).
+
+## Página de metodología (2026-11-20)
+
+- Las tres notas de la página matriz (método, lectura, fuentes) se sustituyen por una página propia, `web/metodologia.html`, enlazada desde la barra superior de la matriz y de cada sistema — las notas eran demasiado escuetas para explicar el cálculo y quitaban sitio a la comparación.
+- Caso ilustrado: un edificio real de Zaragoza (6674803XM7167D) y su estación más cercana por la red. Las figuras se generan con `pipeline/10_figuras_metodologia.py` (manual, fuera de `run_all`) a partir de las capas intermedias y de la misma función de acceso que usa el cálculo (`_acceso.py`), así que la cifra del ejemplo coincide con la publicada.
