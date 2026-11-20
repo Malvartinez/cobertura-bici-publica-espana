@@ -83,3 +83,51 @@ CELF); aquí se anotan las decisiones propias de la versión multisistema. Forma
 
 - Las tres notas de la página matriz (método, lectura, fuentes) se sustituyen por una página propia, `web/metodologia.html`, enlazada desde la barra superior de la matriz y de cada sistema — las notas eran demasiado escuetas para explicar el cálculo y quitaban sitio a la comparación.
 - Caso ilustrado: un edificio real de Zaragoza (6674803XM7167D) y su estación más cercana por la red. Las figuras se generan con `pipeline/10_figuras_metodologia.py` (manual, fuera de `run_all`) a partir de las capas intermedias y de la misma función de acceso que usa el cálculo (`_acceso.py`), así que la cifra del ejemplo coincide con la publicada.
+
+## Distancia desde los portales del Catastro (2026-11-20)
+
+- Propuesta del usuario: la dirección catastral de un edificio es la calle que lo bordea por donde está el acceso; la distancia debe medirse desde ahí. El método de borde (cualquier nodo a ≤ 30 m de la huella) daba por buena la calle de atrás o un lateral sin puerta.
+- Fuente: Catastro INSPIRE Addresses por municipio (ATOM `INSPIRE/addresses/{pr}/ES.SDGC.ad.atom_{pr}.xml`). Se usan las direcciones con `specification = Entrance`, cuyo punto es el portal sobre la fachada (en Zaragoza, distancia mediana a la huella 0 m, p90 2,7 m); las `Parcel` no. Enlace al edificio por la referencia catastral (14 últimos caracteres del `localId`). El GML viene en ISO-8859-1.
+- Paso nuevo `01_direcciones` (tras `01_osm`): descarga, lee los portales y fija la arista de acceso de cada uno — la más cercana; si esa arista es otra calle con nombre (esquina) y hay a ≤ 40 m una arista de la calle de su dirección (nombres normalizados: sin tildes, tipo de vía ni partículas; el Catastro escribe `CL ABANTO, MARTIN DE` y añade sufijos de barrio como `(JSL)`), se usa esta. Las aristas sin nombre (aceras, sendas) se aceptan tal cual. Salida `portales.parquet`.
+- `_acceso.py`: si el edificio tiene portal, sus opciones son los dos extremos de la arista de cada portal (desfase = portal-arista + tramo hasta el extremo) y sustituyen a las de borde; sin portal, método de borde sin cambios.
+- **Solo portal, sin regla mixta** (decisión del usuario). Se le presentó una regla híbrida (portal si ≤ 40 viviendas por portal, borde si no) porque el Catastro registra a menudo una sola dirección por parcela y eso penaliza a manzanas cerradas y conjuntos con varios portales reales (en Zaragoza, una manzana con la estación en la esquina opuesta pasa de 22 a 192 m). Eligió solo portal.
+- Emparejar por nombre de calle apenas cambia el resultado: solo el 30–40 % de las aristas OSM tiene nombre y la más cercana al portal ya suele ser la acera de su fachada. Corrige portales en esquina (≈ 2,5 % en Zaragoza; 0,1 décimas de cobertura).
+- Catastros forales: Bizkaia y Gipuzkoa publican direcciones, pero el punto es el centroide del edificio (distancia mediana al centroide 0 m, comprobado en Bilbao y Donostia); Álava no las publica en la ruta equivalente. Bilbao, Donostia y Vitoria siguen con el método de borde.
+- Validación networkx 50/50 en los 34 sistemas. La página de metodología y sus figuras (mismo edificio de Zaragoza, ahora con sus 21 portales) se rehacen; el caso pasa de 133 a 160 m (sigue en verde). Aplicado también a cobertura-poblacion-bicimad (44,1 → 40,3 %) y cobertura-poblacion-bicing (74,1 → 72,8 %); en BicinRivas, spec en borrador (`docs/specs/acceso-portal-catastral.md`).
+
+| Sistema | < 250 m antes | después | Puntos | Edificios con portal |
+|---|---:|---:|---:|---:|
+| A Coruña | 64,7 % | 60,3 % | −4,4 | 94 % |
+| A Illa de Arousa | 9,8 % | 9,3 % | −0,5 | 60 % |
+| Albacete | 37,6 % | 35,3 % | −2,3 | 76 % |
+| Aller | 3,9 % | 3,9 % | +0,0 | 33 % |
+| Arteixo | 18,7 % | 17,4 % | −1,3 | 71 % |
+| Avilés | 25,1 % | 22,1 % | −3,0 | 80 % |
+| Badajoz | 21,3 % | 18,4 % | −2,9 | 86 % |
+| Barcelona | 74,1 % | 72,8 % | −1,3 | 74 % |
+| Bilbao | 42,1 % | 42,1 % | +0,0 | 0 % |
+| Boadilla del Monte | 41,4 % | 33,0 % | −8,4 | 75 % |
+| Castelló de la Plana | 59,5 % | 56,2 % | −3,3 | 79 % |
+| Castro-Urdiales | 30,4 % | 25,1 % | −5,3 | 80 % |
+| Donostia / San Sebastián | 56,6 % | 56,6 % | +0,0 | 0 % |
+| Elche | 72,8 % | 71,1 % | −1,7 | 76 % |
+| Gijón | 43,8 % | 39,3 % | −4,5 | 75 % |
+| Girona | 56,2 % | 51,9 % | −4,3 | 89 % |
+| Las Palmas de Gran Canaria | 22,6 % | 20,4 % | −2,2 | 85 % |
+| León | 46,3 % | 42,2 % | −4,1 | 96 % |
+| Logroño | 38,3 % | 36,3 % | −2,0 | 87 % |
+| Madrid | 44,1 % | 40,3 % | −3,8 | 96 % |
+| Mislata | 76,8 % | 73,8 % | −3,0 | 95 % |
+| Palma | 36,6 % | 36,0 % | −0,6 | 94 % |
+| Reus | 44,1 % | 40,7 % | −3,4 | 90 % |
+| Rivas-Vaciamadrid | 43,6 % | 38,8 % | −4,8 | 92 % |
+| Sant Vicent del Raspeig | 33,5 % | 30,9 % | −2,6 | 81 % |
+| Santander | 32,0 % | 28,6 % | −3,4 | 87 % |
+| Sevilla | 50,7 % | 46,3 % | −4,4 | 92 % |
+| Torrent | 51,6 % | 49,5 % | −2,1 | 86 % |
+| Valladolid | 55,8 % | 53,4 % | −2,4 | 95 % |
+| València | 73,9 % | 69,8 % | −4,1 | 89 % |
+| Vilagarcía de Arousa | 39,3 % | 35,4 % | −3,9 | 76 % |
+| Villarcayo | 3,7 % | 4,1 % | +0,4 | 91 % |
+| Vitoria-Gasteiz | 8,0 % | 8,0 % | +0,0 | 0 % |
+| Zaragoza | 75,7 % | 71,0 % | −4,7 | 81 % |

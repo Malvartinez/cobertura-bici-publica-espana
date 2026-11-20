@@ -24,7 +24,7 @@ if C["tipo"] != "nacional":
     pd.DataFrame(columns=["refcat", "x", "y", "via", "numero", "arista", "d_arista"]).to_parquet(OUT)
     json.dump({"fuente": None, "n_portales": 0, "nota": f"catastro foral ({C['tipo']}): sin portales; metodo de borde"},
               open(META, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    raise SystemExit(f"catastro {C['tipo']}: sin portales (metodo de borde)")
+    print(f"catastro {C['tipo']}: sin portales (metodo de borde)"); raise SystemExit(0)
 
 RC = RAW / "catastro"; RC.mkdir(exist_ok=True)
 num = C["codigo"][:5]; pr = num[:2]

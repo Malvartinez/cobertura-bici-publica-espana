@@ -47,6 +47,7 @@ de Reis). Detalle en [`docs/decisiones.md`](docs/decisiones.md).
   Bizkaia, Gipuzkoa y Álava.
 - **Zonas**: barrios oficiales del ayuntamiento cuando se han podido descargar (Madrid, Barcelona, Zaragoza, València,
   Sevilla, Valladolid y Las Palmas de Gran Canaria); en el resto, distritos censales del INE.
+- **Portales**: Catastro INSPIRE Addresses (DG del Catastro), por municipio.
 - **Red peatonal**: OpenStreetMap, extractos de download.openstreetmap.fr con el filtro `network_type="walk"` de OSMnx.
 - **Mapa base**: CARTO.
 
@@ -54,9 +55,11 @@ de Reis). Detalle en [`docs/decisiones.md`](docs/decisiones.md).
 
 1. Reparto de la población de cada sección censal entre sus edificios residenciales, proporcional al número de
    viviendas (la suma cuadra exactamente con el censo).
-2. Acceso de cada edificio a la red por su mejor punto: la arista más cercana a su punto interior o cualquier nodo a
-   30 m o menos de su huella, sumando la distancia hasta el borde (mismo criterio que BicinRivas). Cada estación se
-   engancha al nodo más cercano, sumando esa distancia.
+2. Acceso de cada edificio a la red por sus portales (Catastro INSPIRE Addresses, direcciones de tipo portal): cada
+   portal se engancha al tramo de calle más cercano (o al de su calle, si está en una esquina) y vale el mejor portal.
+   Sin portal en el Catastro (y en los catastros forales, que no lo sitúan), por su mejor punto de la fachada: la arista
+   más cercana a su punto interior o cualquier nodo a 30 m o menos de su huella, sumando la distancia hasta el borde.
+   Cada estación se engancha al nodo más cercano, sumando esa distancia.
 3. Dijkstra multiorigen desde todas las estaciones, con corte a 1.500 m.
 4. Agregados por municipio, distrito, barrio y sección; ranking de estaciones (Dijkstra desde cada una, corte 500 m).
 5. Ampliación: algoritmo voraz con evaluación perezosa (CELF) sobre los nodos de la red (uno por celda de 50 m),

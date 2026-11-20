@@ -12,14 +12,15 @@
  "estacion": "84-Parq. Tapices Goya",
  "enganche_estacion_m": 8.4,
  "d_perp_m": 12.5,
- "opciones": 8,
- "opciones_borde": 6,
+ "portales": 21,
+ "portal_mejor": "CL GASSIER, PIERRE 31",
+ "portal_arista_m": 27.1,
+ "portales_misma_arista": 5,
  "recta_m": 111,
- "recta_punto_interior_m": 231,
- "red_punto_interior_m": 341,
- "red_mejor_acceso_m": 133,
- "desfase_mejor_m": 17.4,
- "nivel_punto_interior": "amarillo",
+ "red_borde_m": 133,
+ "red_mejor_acceso_m": 160,
+ "desfase_mejor_m": 44.9,
+ "nivel_borde": "verde",
  "nivel": "verde",
- "distancia_web": 133
+ "distancia_web": 160
 }

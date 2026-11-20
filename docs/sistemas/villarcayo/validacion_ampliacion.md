@@ -4,9 +4,9 @@ Cobertura recalculada desde cero con Dijkstra multifuente (estaciones existentes
 
 | k nuevas | multifuente verde / amarillo / rojo | greedy verde / amarillo / rojo | dif. max (personas) |
 |---:|---|---|---:|
-| 0 | 150.64 / 676.50 / 3254.85 | 150.64 / 676.50 / 3254.85 | 0.0000 |
-| 30 | 3703.88 / 252.75 / 125.37 | 3703.88 / 252.75 / 125.37 | 0.0000 |
+| 0 | 165.56 / 595.18 / 3321.27 | 165.56 / 595.18 / 3321.27 | 0.0000 |
+| 30 | 3731.87 / 229.28 / 120.85 | 3731.87 / 229.28 / 120.85 | 0.0000 |
 
 - Diferencia maxima: **0.0000** personas.
-- k = 0 frente a agregados.json: verde 150.6 vs 151, amarillo 676.5 vs 677, rojo 3254.9 vs 3255.
-- Candidatos: 2827; pares candidato-edificio a <= 500 m: 89866.
+- k = 0 frente a agregados.json: verde 165.6 vs 166, amarillo 595.2 vs 595, rojo 3321.3 vs 3321.
+- Candidatos: 2827; pares candidato-edificio a <= 500 m: 88333.

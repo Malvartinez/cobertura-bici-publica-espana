@@ -5,39 +5,39 @@ Distancia andando por la red peatonal a la estación más cercana. Ordenado por 
 
 | Ciudad | Sistema | Población | Estaciones | Hab./estación | < 250 m | 250–500 m | > 500 m | Nuevas para 80 % |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| Mislata | BiciMislata | 47.003 | 21 | 2.238 | 76,8 % | 23,2 % | 0,0 % | 1 |
-| Zaragoza | Bizi | 699.007 | 276 | 2.533 | 75,7 % | 19,2 % | 5,0 % | 11 |
-| Barcelona | Bicing | 1.713.247 | 544 | 3.149 | 74,1 % | 23,0 % | 2,9 % | 20 |
-| València | Valenbisi | 841.558 | 277 | 3.038 | 73,9 % | 21,7 % | 4,5 % | 21 |
-| Elche | Bicielx | 245.575 | 113 | 2.173 | 72,8 % | 10,7 % | 16,5 % | 13 |
-| A Coruña | BiciCoruña | 251.277 | 81 | 3.102 | 64,7 % | 31,5 % | 3,8 % | 14 |
-| Castelló de la Plana | Bicicas | 183.709 | 64 | 2.870 | 59,5 % | 30,2 % | 10,3 % | 18 |
+| Mislata | BiciMislata | 47.003 | 21 | 2.238 | 73,8 % | 26,2 % | 0,0 % | 1 |
+| Barcelona | Bicing | 1.713.247 | 544 | 3.149 | 72,8 % | 24,2 % | 3,0 % | 26 |
+| Elche | Bicielx | 245.575 | 113 | 2.173 | 71,1 % | 12,2 % | 16,6 % | 15 |
+| Zaragoza | Bizi | 699.007 | 276 | 2.533 | 71,0 % | 23,9 % | 5,1 % | 25 |
+| València | Valenbisi | 841.558 | 277 | 3.038 | 69,8 % | 25,6 % | 4,6 % | 37 |
+| A Coruña | BiciCoruña | 251.277 | 81 | 3.102 | 60,3 % | 35,8 % | 3,9 % | 18 |
 | Donostia / San Sebastián | Dbizi | 189.507 | 70 | 2.707 | 56,6 % | 30,9 % | 12,5 % | 38 |
-| Girona | Girocleta | 108.352 | 36 | 3.010 | 56,2 % | 28,9 % | 14,9 % | 20 |
-| Valladolid | BIKI | 301.798 | 104 | 2.902 | 55,8 % | 36,5 % | 7,7 % | 42 |
-| Torrent | TorrentBici | 91.353 | 20 | 4.568 | 51,6 % | 30,3 % | 18,1 % | 20 |
-| Sevilla | Sevici | 688.714 | 242 | 2.846 | 50,7 % | 35,9 % | 13,3 % | 92 |
-| León | León (nextbike) | 124.091 | 51 | 2.433 | 46,3 % | 46,6 % | 7,1 % | 24 |
-| Madrid | BiciMAD | 3.477.497 | 678 | 5.129 | 44,1 % | 45,7 % | 10,2 % | 390 |
-| Reus | Ganxeta | 111.911 | 24 | 4.663 | 44,1 % | 39,0 % | 16,9 % | 21 |
-| Gijón | Gijón Bici | 271.259 | 47 | 5.771 | 43,8 % | 41,4 % | 14,8 % | 36 |
-| Rivas-Vaciamadrid | BiciNRivas | 103.243 | 42 | 2.458 | 43,6 % | 46,3 % | 10,1 % | 31 |
+| Castelló de la Plana | Bicicas | 183.709 | 64 | 2.870 | 56,2 % | 33,6 % | 10,2 % | 21 |
+| Valladolid | BIKI | 301.798 | 104 | 2.902 | 53,4 % | 38,7 % | 7,9 % | 46 |
+| Girona | Girocleta | 108.352 | 36 | 3.010 | 51,9 % | 32,8 % | 15,2 % | 24 |
+| Torrent | TorrentBici | 91.353 | 20 | 4.568 | 49,5 % | 32,3 % | 18,2 % | 22 |
+| Sevilla | Sevici | 688.714 | 242 | 2.846 | 46,3 % | 39,0 % | 14,7 % | 117 |
+| León | León (nextbike) | 124.091 | 51 | 2.433 | 42,2 % | 50,2 % | 7,7 % | 27 |
 | Bilbao | Bilbaobizi | 350.975 | 67 | 5.238 | 42,1 % | 51,0 % | 6,8 % | 44 |
-| Boadilla del Monte | bibo | 66.319 | 39 | 1.700 | 41,4 % | 35,4 % | 23,2 % | 48 |
-| Vilagarcía de Arousa | VaiBike | 37.975 | 16 | 2.373 | 39,3 % | 27,5 % | 33,2 % | 45 |
-| Logroño | BiciLog | 151.681 | 35 | 4.334 | 38,3 % | 54,0 % | 7,6 % | 27 |
-| Albacete | AlbaBici | 175.068 | 30 | 5.836 | 37,6 % | 49,7 % | 12,7 % | 34 |
-| Palma | Bicipalma | 443.196 | 106 | 4.181 | 36,6 % | 39,2 % | 24,1 % | 90 |
-| Sant Vicent del Raspeig | Bicisanvi | 60.428 | 14 | 4.316 | 33,5 % | 34,7 % | 31,8 % | 21 |
-| Santander | TUeBICI | 175.082 | 42 | 4.169 | 32,0 % | 45,3 % | 22,7 % | 48 |
-| Castro-Urdiales | BiciCastro | 33.392 | 22 | 1.518 | 30,4 % | 40,7 % | 28,9 % | 17 |
-| Avilés | Avilés en Bici | 75.915 | 18 | 4.218 | 25,1 % | 49,2 % | 25,7 % | 24 |
-| Las Palmas de Gran Canaria | Sítycleta | 384.023 | 66 | 5.819 | 22,6 % | 24,8 % | 52,6 % | 127 |
-| Badajoz | BiBa | 150.870 | 29 | 5.202 | 21,3 % | 35,3 % | 43,4 % | 63 |
-| Arteixo | biciArteixo | 34.389 | 15 | 2.293 | 18,7 % | 30,2 % | 51,1 % | 43 |
-| A Illa de Arousa | BiciArousa | 4.813 | 3 | 1.604 | 9,8 % | 20,8 % | 69,4 % | 10 |
+| Reus | Ganxeta | 111.911 | 24 | 4.663 | 40,7 % | 42,0 % | 17,3 % | 23 |
+| Madrid | BiciMAD | 3.477.497 | 678 | 5.129 | 40,3 % | 48,0 % | 11,7 % | 473 |
+| Gijón | Gijón Bici | 271.259 | 47 | 5.771 | 39,3 % | 45,3 % | 15,4 % | 43 |
+| Rivas-Vaciamadrid | BiciNRivas | 103.243 | 42 | 2.458 | 38,8 % | 50,8 % | 10,4 % | 37 |
+| Logroño | BiciLog | 151.681 | 35 | 4.334 | 36,3 % | 55,2 % | 8,5 % | 32 |
+| Palma | Bicipalma | 443.196 | 106 | 4.181 | 36,0 % | 39,7 % | 24,2 % | 92 |
+| Vilagarcía de Arousa | VaiBike | 37.975 | 16 | 2.373 | 35,4 % | 31,1 % | 33,6 % | 49 |
+| Albacete | AlbaBici | 175.068 | 30 | 5.836 | 35,3 % | 51,2 % | 13,5 % | 37 |
+| Boadilla del Monte | bibo | 66.319 | 39 | 1.700 | 33,0 % | 38,8 % | 28,1 % | 55 |
+| Sant Vicent del Raspeig | Bicisanvi | 60.428 | 14 | 4.316 | 30,9 % | 36,6 % | 32,5 % | 24 |
+| Santander | TUeBICI | 175.082 | 42 | 4.169 | 28,6 % | 46,9 % | 24,5 % | 55 |
+| Castro-Urdiales | BiciCastro | 33.392 | 22 | 1.518 | 25,1 % | 43,7 % | 31,2 % | 23 |
+| Avilés | Avilés en Bici | 75.915 | 18 | 4.218 | 22,1 % | 50,6 % | 27,4 % | 27 |
+| Las Palmas de Gran Canaria | Sítycleta | 384.023 | 66 | 5.819 | 20,4 % | 25,0 % | 54,6 % | 145 |
+| Badajoz | BiBa | 150.870 | 29 | 5.202 | 18,4 % | 36,0 % | 45,7 % | 77 |
+| Arteixo | biciArteixo | 34.389 | 15 | 2.293 | 17,4 % | 30,6 % | 52,0 % | 44 |
+| A Illa de Arousa | BiciArousa | 4.813 | 3 | 1.604 | 9,3 % | 19,7 % | 71,1 % | 10 |
 | Vitoria-Gasteiz | MugiBIKE | 260.402 | 12 | 21.700 | 8,0 % | 23,3 % | 68,6 % | 84 |
-| Aller | BeALLER | 10.007 | 3 | 3.336 | 3,9 % | 8,3 % | 87,8 % | — |
-| Villarcayo | Vive Villarcayo | 4.082 | 5 | 816 | 3,7 % | 16,6 % | 79,7 % | 13 |
+| Villarcayo | Vive Villarcayo | 4.082 | 5 | 816 | 4,1 % | 14,6 % | 81,4 % | 13 |
+| Aller | BeALLER | 10.007 | 3 | 3.336 | 3,9 % | 8,0 % | 88,1 % | — |
 
-Conjunto: 11.867.718 habitantes en 34 municipios; 52,0 % a menos de 250 m y 13,1 % a más de 500 m.
+Conjunto: 11.867.718 habitantes en 34 municipios; 49,0 % a menos de 250 m y 13,9 % a más de 500 m.

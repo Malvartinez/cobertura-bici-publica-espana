@@ -176,7 +176,6 @@ f, ax = lienzo(mx, my, R0, "Paso 4 · El camino más corto por la red peatonal",
                "Se calcula el recorrido mínimo desde la estación hasta cada portal del edificio y se queda el mejor")
 fondo(ax, bbox=bb)
 gpd.GeoSeries([huella]).plot(ax=ax, color="#BFE3C8", edgecolor=TX, linewidth=1, zorder=5)
-xi, yi = pts(cam_o); ax.plot(xi, yi, color=AMAR, lw=3.2, zorder=7, solid_capstyle="round")
 from shapely.ops import substring
 _n = shapely.Point(nx_[opc_n[kb]], ny_[opc_n[kb]]); _t = la.project(pr_); _te = 0.0 if shapely.Point(la.coords[0]).distance(_n) < shapely.Point(la.coords[-1]).distance(_n) else la.length
 _seg = np.array(substring(la, min(_t, _te), max(_t, _te)).coords); _seg = _seg if _te >= _t else _seg[::-1]  # del portal proyectado al nodo
@@ -186,10 +185,8 @@ ax.scatter(por.x, por.y, s=22, color=VERDE, edgecolor="white", linewidth=.6, zor
 ax.scatter([ppx], [ppy], s=60, color=VERDE, edgecolor=TX, zorder=11)
 ax.scatter([ex], [ey], s=110, color=AZUL, edgecolor="white", linewidth=1.6, zorder=12)
 rotulo(ax, xm[len(xm) // 2], ym[len(ym) // 2], f"Mejor portal: {caso['red_mejor_acceso_m']} m", dx=R0 * .12, dy=R0 * .12, color=TX, peso="bold")
-_solo = [k for k in range(len(cam_o)) if cam_o[k] not in set(cam_b)] or [0]; _k = _solo[len(_solo) // 2]
-rotulo(ax, xi[_k], yi[_k], f"Desde cualquier punto a 30 m de la fachada: {caso['red_borde_m']} m", dx=-R0 * .05, dy=-R0 * .22, ha="center")
 ax.legend(handles=[Line2D([], [], color=VERDE, lw=3.6, label="Recorrido hasta el mejor portal (el que se usa)"),
-                   Line2D([], [], color=AMAR, lw=3.2, label="Si valiera cualquier punto a 30 m de la fachada"),
+                   Line2D([], [], marker="o", ls="", markerfacecolor=VERDE, markeredgecolor="white", markersize=7, label="Portales del edificio"),
                    Line2D([], [], marker="o", ls="", color=AZUL, markersize=9, label="Estación")],
           loc="lower right", framealpha=.95, edgecolor="#D5D9DE", fontsize=9.5)
 escala(ax, 100); pie(f); guardar(f, "paso4_camino.png")
